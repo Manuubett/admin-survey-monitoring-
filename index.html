@@ -1,0 +1,1747 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Embu Survey — Field Operations Monitor</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:       #0d1214;
+  --bg2:      #131c1f;
+  --bg3:      #192328;
+  --border:   #1f2e33;
+  --border2:  #274048;
+  --text:     #dff0ed;
+  --muted:    #6a9490;
+  --muted2:   #3d5e59;
+  --accent:   #2dd4bf;
+  --accent-l: rgba(45,212,191,.12);
+  --green:    #4ade80;
+  --green-l:  rgba(74,222,128,.12);
+  --amber:    #fbbf24;
+  --amber-l:  rgba(251,191,36,.12);
+  --red:      #f87171;
+  --red-l:    rgba(248,113,113,.12);
+  --purple:   #818cf8;
+  --purple-l: rgba(129,140,248,.12);
+  --teal:     #34d399;
+  --teal-l:   rgba(52,211,153,.12);
+  --orange:   #fb923c;
+  --orange-l: rgba(251,146,60,.12);
+  --font:     'Inter', sans-serif;
+  --mono:     'JetBrains Mono', monospace;
+  --r:        8px;
+  --r2:       12px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;min-height:100vh;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+/* ── LOGIN ── */
+#loginWall{
+  position:fixed;inset:0;
+  background:var(--bg);
+  z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+}
+.login-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:44px 48px;
+  width:400px;text-align:center;
+  box-shadow:0 24px 64px rgba(0,0,0,.5);
+}
+.login-icon{
+  width:52px;height:52px;
+  background:linear-gradient(135deg,var(--accent),#10b981);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;margin:0 auto 20px;
+  box-shadow:0 8px 24px rgba(45,212,191,.35);
+}
+.login-card h2{font-size:22px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.login-card p{color:var(--muted);font-size:13px;margin-bottom:28px;}
+.l-inp{
+  width:100%;padding:11px 14px;
+  background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);
+  font-family:var(--font);font-size:14px;color:var(--text);
+  margin-bottom:10px;transition:border-color .2s;
+}
+.l-inp:focus{outline:none;border-color:var(--accent);background:var(--bg2);}
+.l-inp::placeholder{color:var(--muted2);}
+.l-err{color:var(--red);font-size:12px;margin-bottom:10px;display:none;}
+.l-btn{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--accent),#10b981);
+  color:#fff;border:none;border-radius:var(--r);
+  font-family:var(--font);font-size:15px;font-weight:700;
+  cursor:pointer;transition:opacity .15s;
+  box-shadow:0 4px 16px rgba(45,212,191,.4);
+}
+.l-btn:hover{opacity:.88;}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;
+  position:sticky;top:0;z-index:100;
+}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-icon{
+  width:32px;height:32px;
+  background:linear-gradient(135deg,var(--accent),#10b981);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:14px;box-shadow:0 2px 8px rgba(45,212,191,.3);
+}
+.brand-name{font-weight:800;font-size:15px;color:var(--text);letter-spacing:-.2px;}
+.brand-sub{font-size:11px;color:var(--muted);}
+.divider{width:1px;height:28px;background:var(--border);}
+.live-badge{
+  display:flex;align-items:center;gap:7px;
+  font-size:12px;color:var(--muted);font-family:var(--mono);
+}
+.live-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 0 2px var(--green-l);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px var(--green-l)}50%{box-shadow:0 0 0 5px rgba(34,197,94,.05)}}
+.topbar-right{display:flex;gap:8px;}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:var(--r);
+  font-family:var(--font);font-size:12px;font-weight:600;
+  cursor:pointer;border:1px solid var(--border);
+  background:var(--bg3);color:var(--muted);
+  transition:all .15s;white-space:nowrap;
+}
+.btn:hover{border-color:var(--border2);color:var(--text);background:var(--bg2);}
+.btn.primary{background:var(--accent);color:#0d1214;border-color:var(--accent);}
+.btn.primary:hover{background:#14b8a6;}
+.btn.success{background:var(--green);color:#fff;border-color:var(--green);}
+.btn.success:hover{background:#16a34a;}
+.btn:disabled{opacity:.4;pointer-events:none;}
+
+/* ── PAGE ── */
+.page{max-width:1600px;margin:0 auto;padding:22px 28px 60px;}
+
+/* ── SECTION HEADING ── */
+.sec-head{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:14px;margin-top:28px;
+}
+.sec-head:first-child{margin-top:0;}
+.sec-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);}
+.sec-head::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── STAT STRIP ── */
+.stat-strip{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:24px;}
+.stat-tile{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px 16px;
+  position:relative;overflow:hidden;
+  transition:border-color .2s,transform .2s;
+}
+.stat-tile:hover{border-color:var(--border2);transform:translateY(-1px);}
+.stat-tile::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  border-radius:var(--r) var(--r) 0 0;
+}
+.st-blue::before   {background:var(--accent);}
+.st-green::before  {background:var(--green);}
+.st-amber::before  {background:var(--amber);}
+.st-red::before    {background:var(--red);}
+.st-purple::before {background:var(--purple);}
+.st-teal::before   {background:var(--teal);}
+.st-orange::before {background:var(--orange);}
+.stat-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.stat-value{font-family:var(--mono);font-size:26px;font-weight:500;line-height:1;color:var(--text);}
+.stat-value.blue   {color:var(--accent);}
+.stat-value.green  {color:var(--green);}
+.stat-value.amber  {color:var(--amber);}
+.stat-value.red    {color:var(--red);}
+.stat-value.purple {color:var(--purple);}
+.stat-value.teal   {color:var(--teal);}
+.stat-value.orange {color:var(--orange);}
+.stat-sub{font-size:11px;color:var(--muted2);margin-top:5px;font-family:var(--mono);}
+
+/* ── TWO-COL GRID ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.grid-14{display:grid;grid-template-columns:1fr 2fr;gap:14px;margin-bottom:14px;}
+
+/* ── CARD ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;}
+.card-head{
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,.015);
+}
+.card-title{font-weight:700;font-size:13px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.card-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.card-body{padding:16px 18px;}
+.card-badge{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  padding:3px 9px;border-radius:20px;white-space:nowrap;
+}
+.cb-green  {background:var(--green-l);color:var(--green);}
+.cb-amber  {background:var(--amber-l);color:var(--amber);}
+.cb-red    {background:var(--red-l);color:var(--red);}
+.cb-blue   {background:var(--accent-l);color:var(--accent);}
+.cb-purple {background:var(--purple-l);color:var(--purple);}
+.cb-teal   {background:var(--teal-l);color:var(--teal);}
+
+/* ── RESEARCHER LEADERBOARD ── */
+.res-list{display:flex;flex-direction:column;gap:8px;}
+.res-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r);
+  transition:border-color .15s;
+}
+.res-row:hover{border-color:var(--border2);}
+.res-rank{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--bg2);border:1px solid var(--border2);
+  font-family:var(--mono);font-size:11px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);flex-shrink:0;
+}
+.res-rank.gold{background:var(--amber-l);border-color:var(--amber);color:var(--amber);}
+.res-rank.silver{background:var(--accent-l);border-color:var(--accent);color:var(--accent);}
+.res-rank.bronze{background:var(--orange-l);border-color:var(--orange);color:var(--orange);}
+.res-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:12px;color:#fff;flex-shrink:0;
+}
+.res-info{flex:1;min-width:0;}
+.res-name{font-weight:600;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.res-id{font-family:var(--mono);font-size:10px;color:var(--muted2);}
+.res-stats{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.res-stat{text-align:right;}
+.res-stat-val{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--text);}
+.res-stat-lbl{font-size:10px;color:var(--muted2);margin-top:1px;}
+.res-bar-wrap{width:80px;}
+.res-bar-track{height:4px;background:var(--bg);border-radius:2px;overflow:hidden;}
+.res-bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 1s cubic-bezier(.16,1,.3,1);}
+.res-gps{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--mono);font-size:10px;
+  padding:2px 7px;border-radius:10px;
+  background:var(--green-l);color:var(--green);
+}
+.res-gps.warn{background:var(--red-l);color:var(--red);}
+.res-last{font-family:var(--mono);font-size:10px;color:var(--muted2);}
+
+/* ── ACTIVITY TIMELINE ── */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{
+  display:flex;gap:12px;padding:9px 0;
+  border-bottom:1px solid var(--border);
+}
+.tl-item:last-child{border-bottom:none;}
+.tl-dot{
+  width:8px;height:8px;border-radius:50%;
+  margin-top:5px;flex-shrink:0;
+}
+.tl-dot.green{background:var(--green);}
+.tl-dot.amber{background:var(--amber);}
+.tl-dot.red  {background:var(--red);}
+.tl-dot.blue {background:var(--accent);}
+.tl-body{flex:1;min-width:0;}
+.tl-text{font-size:12px;color:var(--text);line-height:1.5;}
+.tl-text strong{color:var(--accent);}
+.tl-time{font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:3px;}
+.tl-meta{font-family:var(--mono);font-size:10px;color:var(--muted);flex-shrink:0;text-align:right;}
+
+/* ── GPS TABLE ── */
+.gps-table{width:100%;border-collapse:collapse;}
+.gps-table th{
+  padding:8px 12px;background:var(--bg3);
+  font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--muted);text-align:left;border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.gps-table td{
+  padding:8px 12px;border-bottom:1px solid var(--border);
+  font-size:12px;color:var(--muted);vertical-align:middle;
+}
+.gps-table tr:last-child td{border-bottom:none;}
+.gps-table tr:hover td{background:rgba(255,255,255,.02);}
+.gps-table td.main{color:var(--text);font-weight:500;}
+.gps-table td.mono{font-family:var(--mono);font-size:10.5px;}
+.map-link{color:var(--accent);text-decoration:none;font-size:11px;}
+.map-link:hover{text-decoration:underline;}
+.acc-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  padding:2px 7px;border-radius:10px;
+}
+.acc-good{background:var(--green-l);color:var(--green);}
+.acc-warn{background:var(--amber-l);color:var(--amber);}
+.acc-poor{background:var(--red-l);color:var(--red);}
+
+/* ── SUBMISSION HEATMAP ── */
+.heatmap-grid{
+  display:grid;grid-template-columns:repeat(24,1fr);
+  gap:3px;margin-bottom:8px;
+}
+.hm-cell{
+  height:24px;border-radius:3px;
+  background:var(--bg3);
+  transition:background .2s;
+  cursor:default;
+  position:relative;
+}
+.hm-cell:hover::after{
+  content:attr(data-tip);
+  position:absolute;bottom:calc(100%+4px);left:50%;transform:translateX(-50%);
+  background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text);font-size:10px;padding:3px 7px;border-radius:4px;
+  white-space:nowrap;z-index:10;pointer-events:none;
+  font-family:var(--mono);
+}
+.hm-labels{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;}
+.hm-label{font-family:var(--mono);font-size:9px;color:var(--muted2);text-align:center;}
+
+/* ── DURATION CHART ── */
+.dur-bars{display:flex;flex-direction:column;gap:8px;}
+.dur-row{display:flex;align-items:center;gap:10px;}
+.dur-name{font-size:12px;color:var(--text);font-weight:500;width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
+.dur-track{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+.dur-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--teal));transition:width 1s cubic-bezier(.16,1,.3,1);}
+.dur-val{font-family:var(--mono);font-size:11px;color:var(--muted);width:40px;text-align:right;flex-shrink:0;}
+
+/* ── ALERT PANEL ── */
+.alert-list{display:flex;flex-direction:column;gap:8px;}
+.alert-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 14px;border-radius:var(--r);
+  border:1px solid;
+}
+.alert-item.warn{background:var(--amber-l);border-color:rgba(245,158,11,.3);color:var(--amber);}
+.alert-item.danger{background:var(--red-l);border-color:rgba(239,68,68,.3);color:var(--red);}
+.alert-item.info{background:var(--accent-l);border-color:rgba(59,130,246,.3);color:var(--accent);}
+.alert-item.good{background:var(--green-l);border-color:rgba(34,197,94,.3);color:var(--green);}
+.alert-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.alert-body{flex:1;}
+.alert-title{font-weight:700;font-size:12px;margin-bottom:2px;}
+.alert-text{font-size:11px;opacity:.85;line-height:1.5;}
+
+/* ── MAIN DATA TABLE ── */
+.toolbar{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  padding:12px 16px;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.toolbar-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.search-wrap{position:relative;flex:1;min-width:200px;}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--muted2);pointer-events:none;}
+.search-box{
+  width:100%;padding:7px 12px 7px 32px;
+  background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);
+  font-family:var(--font);font-size:13px;color:var(--text);
+  transition:border-color .15s;
+}
+.search-box:focus{outline:none;border-color:var(--accent);}
+.search-box::placeholder{color:var(--muted2);}
+.fsel{
+  padding:7px 11px;background:var(--bg3);
+  border:1.5px solid var(--border);border-radius:var(--r);
+  font-family:var(--font);font-size:12px;color:var(--text);
+  cursor:pointer;transition:border-color .15s;
+}
+.fsel:focus{outline:none;border-color:var(--accent);}
+.fsel option{background:var(--bg3);}
+
+.table-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;}
+.table-head{
+  padding:12px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,.015);
+}
+.table-title{font-weight:700;font-size:13px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.row-count{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  background:var(--accent-l);color:var(--accent);
+  padding:2px 9px;border-radius:20px;
+}
+.table-scroll{overflow-x:auto;max-height:520px;overflow-y:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:1100px;}
+thead th{
+  position:sticky;top:0;
+  padding:9px 12px;background:var(--bg3);
+  border-bottom:1px solid var(--border);
+  text-align:left;font-size:10px;font-weight:700;
+  letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  white-space:nowrap;cursor:pointer;user-select:none;
+  transition:background .1s;
+}
+thead th:hover{background:var(--bg2);color:var(--accent);}
+thead th .sa{margin-left:4px;opacity:.3;font-size:9px;}
+thead th.sort-asc  .sa::after{content:'▲';opacity:1;color:var(--accent);}
+thead th.sort-desc .sa::after{content:'▼';opacity:1;color:var(--accent);}
+tbody tr{transition:background .1s;}
+tbody tr:hover{background:rgba(255,255,255,.025);}
+tbody td{
+  padding:9px 12px;border-bottom:1px solid var(--border);
+  color:var(--muted);vertical-align:middle;white-space:nowrap;
+}
+tbody td.main{color:var(--text);font-weight:500;}
+tbody td.mono{font-family:var(--mono);font-size:10.5px;color:var(--muted2);}
+.table-footer{
+  padding:10px 18px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;color:var(--muted);flex-wrap:wrap;gap:8px;
+}
+.export-group{display:flex;gap:8px;}
+
+/* ── PILL ── */
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap;}
+.p-green  {background:var(--green-l);color:var(--green);}
+.p-amber  {background:var(--amber-l);color:var(--amber);}
+.p-red    {background:var(--red-l);color:var(--red);}
+.p-blue   {background:var(--accent-l);color:var(--accent);}
+.p-purple {background:var(--purple-l);color:var(--purple);}
+.p-gray   {background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+
+/* ── LOADER ── */
+.loader-wrap{display:none;flex-direction:column;align-items:center;justify-content:center;padding:52px;gap:14px;}
+.loader-wrap.show{display:flex;}
+.spinner{width:32px;height:32px;border:2.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{font-size:12px;color:var(--muted);font-family:var(--mono);}
+.empty-state{display:none;flex-direction:column;align-items:center;justify-content:center;padding:52px;gap:8px;color:var(--muted2);}
+.empty-state.show{display:flex;}
+
+/* ── MODAL ── */
+.modal-bg{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+  z-index:400;display:none;align-items:center;justify-content:center;
+}
+.modal-bg.open{display:flex;}
+.modal{
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:16px;width:640px;max-width:95vw;max-height:88vh;
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 32px 80px rgba(0,0,0,.6);
+  animation:mIn .2s ease;
+}
+@keyframes mIn{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-head{
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,.02);
+}
+.modal-title{font-weight:800;font-size:14px;color:var(--text);}
+.modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px;border-radius:6px;}
+.modal-close:hover{background:var(--bg3);color:var(--text);}
+.modal-body{overflow-y:auto;padding:18px 20px;flex:1;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.detail-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;}
+.detail-item.full{grid-column:span 2;}
+.detail-key{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted2);font-weight:700;margin-bottom:4px;}
+.detail-val{font-size:12px;color:var(--text);font-weight:500;word-break:break-word;}
+.modal-section-title{
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--accent);margin:16px 0 8px;
+}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:22px;right:22px;
+  background:var(--bg2);border:1px solid var(--border2);color:var(--text);
+  padding:11px 18px;border-radius:var(--r);
+  font-size:12px;font-weight:600;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  transform:translateY(80px);opacity:0;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  z-index:600;display:flex;align-items:center;gap:8px;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{background:var(--green);border-color:var(--green);color:#fff;}
+.toast.error  {background:var(--red);border-color:var(--red);color:#fff;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1200px){.stat-strip{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:900px){
+  .stat-strip{grid-template-columns:repeat(4,1fr);}
+  .grid-2,.grid-3,.grid-14{grid-template-columns:1fr;}
+  .page{padding:14px 14px 40px;}
+  .topbar{padding:0 16px;}
+}
+@media(max-width:580px){.stat-strip{grid-template-columns:repeat(2,1fr);}}
+
+/* ── LIGHT MODE ── */
+body.light {
+  --bg:       #f0f4f8;
+  --bg2:      #ffffff;
+  --bg3:      #f7f9fc;
+  --border:   #dde3eb;
+  --border2:  #c4cdd9;
+  --text:     #0f1f2e;
+  --muted:    #4a6278;
+  --muted2:   #7a92a8;
+  --accent:   #0ea5e9;
+  --accent-l: rgba(14,165,233,.12);
+  --green:    #16a34a;
+  --green-l:  rgba(22,163,74,.12);
+  --amber:    #d97706;
+  --amber-l:  rgba(217,119,6,.12);
+  --red:      #dc2626;
+  --red-l:    rgba(220,38,38,.12);
+  --purple:   #7c3aed;
+  --purple-l: rgba(124,58,237,.12);
+  --teal:     #0d9488;
+  --teal-l:   rgba(13,148,136,.12);
+  --orange:   #ea580c;
+  --orange-l: rgba(234,88,12,.12);
+}
+body.light .topbar { box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+body.light .login-card { box-shadow: 0 8px 40px rgba(0,0,0,.1); }
+body.light thead th { background: #eef2f7; }
+body.light tbody tr:hover { background: rgba(0,0,0,.025); }
+body.light .toast { box-shadow: 0 4px 20px rgba(0,0,0,.15); }
+
+/* ── LOCATION NAME BADGE ── */
+.loc-name-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--accent-l);
+  border: 1px solid rgba(45,212,191,.25);
+  color: var(--accent);
+  font-size: 11px; font-weight: 600;
+  padding: 3px 9px; border-radius: 20px;
+  max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  cursor: help;
+  transition: background .2s;
+}
+.loc-name-badge:hover { background: rgba(45,212,191,.22); }
+.loc-name-badge .loc-pin { flex-shrink: 0; }
+.loc-loading { color: var(--muted2); font-size: 11px; font-style: italic; }
+
+/* modal location highlight */
+.loc-detail-block {
+  margin: 4px 0;
+  background: var(--accent-l);
+  border: 1px solid rgba(45,212,191,.25);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
+  padding: 10px 14px;
+}
+.loc-detail-block .loc-main {
+  font-size: 14px; font-weight: 700; color: var(--accent);
+}
+.loc-detail-block .loc-coords {
+  font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-top: 4px;
+}
+
+/* ── DARK MODE TOGGLE ── */
+.dm-toggle {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 20px; padding: 5px 10px 5px 5px;
+  cursor: pointer; transition: all .2s;
+  font-size: 12px; color: var(--muted); font-weight: 600;
+  user-select: none; white-space: nowrap;
+}
+.dm-toggle:hover { border-color: var(--border2); color: var(--text); }
+.dm-track {
+  width: 34px; height: 18px; border-radius: 9px;
+  background: var(--border2); position: relative;
+  transition: background .3s; flex-shrink: 0;
+}
+.dm-track.on { background: var(--accent); }
+.dm-knob {
+  position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: white; transition: transform .3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+}
+.dm-track.on .dm-knob { transform: translateX(16px); }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginWall">
+  <div class="login-card">
+    <div class="login-icon">🛰️</div>
+    <h2>Field Operations</h2>
+    <p>Embu County Survey · Researcher Monitoring Panel</p>
+    <input class="l-inp" id="lu" type="text" placeholder="Username" autocomplete="off">
+    <input class="l-inp" id="lp" type="password" placeholder="Password">
+    <p class="l-err" id="lerr">Incorrect credentials. Please try again.</p>
+    <button class="l-btn" onclick="doLogin()">Sign In →</button>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="brand">
+      <div class="brand-icon">🛰️</div>
+      <div>
+        <div class="brand-name">Field Operations Monitor</div>
+        <div class="brand-sub">Embu County Survey · Researcher Panel</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span id="liveStatus">Connecting…</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="dm-toggle" id="dmToggle" onclick="toggleDarkMode()" title="Toggle light/dark mode">
+      <div class="dm-track" id="dmTrack"><div class="dm-knob"></div></div>
+      <span id="dmLabel">🌙 Dark</span>
+    </div>
+    <button class="btn" id="refreshBtn" onclick="loadData()">↻ Refresh</button>
+    <button class="btn success" onclick="exportExcel()">⬇ Excel</button>
+    <button class="btn primary" onclick="exportCSV()">⬇ CSV</button>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ── KPI STRIP ── -->
+  <div class="stat-strip">
+    <div class="stat-tile st-blue">
+      <div class="stat-label">Total Submissions</div>
+      <div class="stat-value blue" id="st-total">—</div>
+      <div class="stat-sub">Updated <span id="st-updated">—</span></div>
+    </div>
+    <div class="stat-tile st-green">
+      <div class="stat-label">Today's Submissions</div>
+      <div class="stat-value green" id="st-today">—</div>
+      <div class="stat-sub" id="st-today-res">— researchers</div>
+    </div>
+    <div class="stat-tile st-amber">
+      <div class="stat-label">Active Researchers</div>
+      <div class="stat-value amber" id="st-researchers">—</div>
+      <div class="stat-sub">in the field</div>
+    </div>
+    <div class="stat-tile st-teal">
+      <div class="stat-label">GPS Verified</div>
+      <div class="stat-value teal" id="st-gps">—</div>
+      <div class="stat-sub" id="st-gps-p">—% coverage</div>
+    </div>
+    <div class="stat-tile st-purple">
+      <div class="stat-label">Avg Accuracy</div>
+      <div class="stat-value purple" id="st-acc">—</div>
+      <div class="stat-sub">metres avg</div>
+    </div>
+    <div class="stat-tile st-orange">
+      <div class="stat-label">GPS Flagged</div>
+      <div class="stat-value orange" id="st-flagged">—</div>
+      <div class="stat-sub">&gt;50m accuracy</div>
+    </div>
+    <div class="stat-tile st-red">
+      <div class="stat-label">No GPS</div>
+      <div class="stat-value red" id="st-nogps">—</div>
+      <div class="stat-sub">missing location</div>
+    </div>
+    <div class="stat-tile st-green">
+      <div class="stat-label">This Hour</div>
+      <div class="stat-value green" id="st-hour">—</div>
+      <div class="stat-sub">submissions/hr</div>
+    </div>
+  </div>
+
+  <!-- ── ALERTS ── -->
+  <div class="sec-head"><span class="sec-title">🔔 Field Alerts</span></div>
+  <div class="alert-list" id="alertList" style="margin-bottom:20px;">
+    <div class="alert-item info"><div class="alert-icon">ℹ️</div><div class="alert-body"><div class="alert-title">Loading…</div><div class="alert-text">Analysing field data for anomalies.</div></div></div>
+  </div>
+
+  <!-- ── RESEARCHER PERFORMANCE + TIMELINE ── -->
+  <div class="sec-head"><span class="sec-title">👥 Researcher Performance</span></div>
+  <div class="grid-14" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">📊 Leaderboard</div><div class="card-sub">By total submissions</div></div>
+        <span class="card-badge cb-blue" id="res-count-badge">— researchers</span>
+      </div>
+      <div class="card-body" style="max-height:400px;overflow-y:auto;">
+        <div class="res-list" id="res-leaderboard"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">⏱ Recent Activity Feed</div><div class="card-sub">Last 30 submissions</div></div>
+        <span class="card-badge cb-green">Live</span>
+      </div>
+      <div class="card-body" style="max-height:400px;overflow-y:auto;">
+        <div class="timeline" id="activity-feed"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HOURLY + DAILY PATTERNS ── -->
+  <div class="sec-head"><span class="sec-title">📈 Submission Patterns</span></div>
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">🕐 Hourly Submission Heatmap</div><div class="card-sub">Submissions by hour of day (all-time)</div></div>
+      </div>
+      <div class="card-body">
+        <div class="heatmap-grid" id="hourly-heatmap"></div>
+        <div class="hm-labels" id="hourly-labels"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">📅 Daily Output by Researcher</div><div class="card-sub">Avg submissions per day (last 7 days)</div></div>
+      </div>
+      <div class="card-body">
+        <div class="dur-bars" id="daily-output"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GPS OVERVIEW ── -->
+  <div class="sec-head"><span class="sec-title">📍 GPS Location Overview</span></div>
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">🗺 GPS Accuracy Distribution</div><div class="card-sub">By researcher</div></div>
+      </div>
+      <div class="card-body" style="max-height:320px;overflow-y:auto;">
+        <table class="gps-table" id="gps-acc-table">
+          <thead><tr><th>Researcher</th><th>Submissions</th><th>GPS%</th><th>Avg Accuracy</th><th>Flagged</th></tr></thead>
+          <tbody id="gps-acc-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">⚠️ GPS Anomalies</div><div class="card-sub">Submissions with poor or missing GPS</div></div>
+        <span class="card-badge cb-amber" id="anomaly-count">—</span>
+      </div>
+      <div class="card-body" style="max-height:320px;overflow-y:auto;">
+        <table class="gps-table" id="anomaly-table">
+          <thead><tr><th>#</th><th>Researcher</th><th>Time</th><th>Location</th><th>Issue</th></tr></thead>
+          <tbody id="anomaly-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FULL SUBMISSIONS TABLE ── -->
+  <div class="sec-head"><span class="sec-title">📋 All Submissions — Field Data</span></div>
+
+  <div class="toolbar">
+    <span class="toolbar-label">Filter</span>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-box" id="searchInput" type="text" placeholder="Search researcher, ward, constituency…" oninput="applyFilters()">
+    </div>
+    <select class="fsel" id="fResearcher" onchange="applyFilters()"><option value="">All Researchers</option></select>
+    <select class="fsel" id="fConstituency" onchange="applyFilters()">
+      <option value="">All Constituencies</option>
+      <option>Manyatta</option><option>Runyenjes</option>
+      <option>Mbeere North</option><option>Mbeere South</option>
+    </select>
+    <select class="fsel" id="fWard" onchange="applyFilters()">
+      <option value="">All Wards</option>
+      <optgroup label="Manyatta"><option>Ruguru/Ngandori</option><option>Kithimu</option><option>Nginda</option><option>Mbeti North</option><option>Kirimari</option><option>Gaturi South</option></optgroup>
+      <optgroup label="Runyenjes"><option>Gaturi North</option><option>Kaagari South</option><option>Kaagari North</option><option>Central Ward</option><option>Kyeni North</option><option>Kyeni South</option></optgroup>
+      <optgroup label="Mbeere South"><option>Mwea</option><option>Makima</option><option>Mbeti South</option><option>Mavuria</option><option>Kiambere</option></optgroup>
+      <optgroup label="Mbeere North"><option>Nthawa</option><option>Muminji</option><option>Evurore</option></optgroup>
+    </select>
+    <select class="fsel" id="fGps" onchange="applyFilters()">
+      <option value="">All GPS</option>
+      <option value="good">✓ Good ≤20m</option>
+      <option value="warn">~ Warn ≤50m</option>
+      <option value="poor">⚠ Poor &gt;50m</option>
+      <option value="none">✗ No GPS</option>
+    </select>
+    <select class="fsel" id="fDate" onchange="applyFilters()">
+      <option value="">All Dates</option>
+      <option value="today">Today</option>
+      <option value="yesterday">Yesterday</option>
+      <option value="week">This Week</option>
+    </select>
+    <button class="btn" onclick="clearFilters()">✕ Clear</button>
+  </div>
+
+  <div class="table-panel">
+    <div class="table-head">
+      <div class="table-title">
+        🛰️ Field Submissions
+        <span class="row-count" id="rowCount">0 rows</span>
+      </div>
+      <span style="font-size:11px;color:var(--muted)">Click any row to view submission detail</span>
+    </div>
+
+    <div class="loader-wrap show" id="loader">
+      <div class="spinner"></div>
+      <div class="loader-text">LOADING FIELD DATA…</div>
+    </div>
+    <div class="empty-state" id="emptyState">
+      <div style="font-size:32px">🗂️</div>
+      <div style="font-weight:700;color:var(--muted)">No submissions match filters</div>
+    </div>
+
+    <div class="table-scroll" id="tableScroll" style="display:none;">
+      <table id="mainTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)">#<span class="sa"></span></th>
+            <th onclick="sortTable(1)">Server Time<span class="sa"></span></th>
+            <th onclick="sortTable(2)">Device Time<span class="sa"></span></th>
+            <th onclick="sortTable(3)">Researcher<span class="sa"></span></th>
+            <th onclick="sortTable(4)">Researcher ID<span class="sa"></span></th>
+            <th onclick="sortTable(5)">Constituency<span class="sa"></span></th>
+            <th onclick="sortTable(6)">Ward<span class="sa"></span></th>
+            <th>GPS Lat</th>
+            <th>GPS Lng</th>
+            <th onclick="sortTable(9)">Accuracy<span class="sa"></span></th>
+            <th>Location</th>
+            <th>Time Drift</th>
+            <th>Open Map</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <span style="font-family:var(--mono);font-size:11px;" id="footerInfo">No data loaded</span>
+      <div class="export-group">
+        <button class="btn success" onclick="exportExcel()">⬇ Excel</button>
+        <button class="btn primary" onclick="exportCSV()">⬇ CSV</button>
+        <button class="btn" onclick="exportJSON()">⬇ JSON</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- ROW DETAIL MODAL -->
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="modalTitle">Submission Detail</span>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════
+   FIREBASE
+════════════════════════ */
+ const firebaseConfig = {
+    apiKey: "AIzaSyAXeNgPLKFgfxBKNta7UlGzHW-bjWzghas",
+    authDomain: "survey-842bd.firebaseapp.com",
+    projectId: "survey-842bd",
+    storageBucket: "survey-842bd.firebasestorage.app",
+    messagingSenderId: "916255795370",
+    appId: "1:916255795370:web:3f186720bf9e2b163dc8d3",
+    measurementId: "G-JZLGDGS974"
+  };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/* ════════════════════════
+   STATE
+════════════════════════ */
+let allData = [];
+let filtered = [];
+let sortCol = 1, sortDir = 'desc';
+let locationCache = {};
+let locationCacheData = {};
+
+/* ════════════════════════
+   LOGIN
+════════════════════════ */
+['lu','lp'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+});
+
+function doLogin() {
+  const u = document.getElementById('lu').value.trim();
+  const p = document.getElementById('lp').value;
+  if (u === 'admin' && p === 'embu2025') {
+    document.getElementById('loginWall').style.display = 'none';
+    loadData();
+  } else {
+    document.getElementById('lerr').style.display = 'block';
+  }
+}
+
+/* ════════════════════════
+   LOAD DATA
+════════════════════════ */
+async function loadData() {
+  showLoader(true);
+  setStatus('Fetching…');
+  document.getElementById('refreshBtn').disabled = true;
+  try {
+    const snap = await db.collection('responses').orderBy('timestamp','desc').get();
+    allData = snap.docs.map((doc,i) => ({ _idx: i+1, _id: doc.id, ...doc.data() }));
+    buildKPIs();
+    buildAlerts();
+    buildLeaderboard();
+    buildActivityFeed();
+    buildHeatmap();
+    buildDailyOutput();
+    buildGPSTables();
+    populateResearcherFilter();
+    applyFilters();
+    setStatus('Live · ' + allData.length + ' submissions');
+    document.getElementById('st-updated').textContent = new Date().toLocaleTimeString();
+    toast('✓ Loaded ' + allData.length + ' submissions', 'success');
+  } catch(e) {
+    setStatus('Error: ' + e.message);
+    toast('Error: ' + e.message, 'error');
+  }
+  showLoader(false);
+  document.getElementById('refreshBtn').disabled = false;
+}
+
+/* ════════════════════════
+   KPIs
+════════════════════════ */
+function buildKPIs() {
+  const n = allData.length;
+  const today = new Date().toDateString();
+  const todayData = allData.filter(d => {
+    const ts = d.timestamp?.toDate ? d.timestamp.toDate() : null;
+    return ts && ts.toDateString() === today;
+  });
+  const thisHour = allData.filter(d => {
+    const ts = d.timestamp?.toDate ? d.timestamp.toDate() : null;
+    return ts && (Date.now() - ts.getTime()) < 3600000;
+  });
+  const gpsData    = allData.filter(d => d.gps?.lat);
+  const flagged    = allData.filter(d => d.gps?.accuracy && d.gps.accuracy > 50);
+  const noGps      = allData.filter(d => !d.gps?.lat);
+  const accs       = allData.filter(d => d.gps?.accuracy).map(d => d.gps.accuracy);
+  const avgAcc     = accs.length ? Math.round(accs.reduce((a,b)=>a+b,0)/accs.length) : 0;
+  const uniqueRes  = new Set(allData.map(d=>d.researcherName).filter(Boolean));
+  const todayRes   = new Set(todayData.map(d=>d.researcherName).filter(Boolean));
+
+  document.getElementById('st-total').textContent      = n;
+  document.getElementById('st-today').textContent      = todayData.length;
+  document.getElementById('st-today-res').textContent  = todayRes.size + ' researchers';
+  document.getElementById('st-researchers').textContent = uniqueRes.size;
+  document.getElementById('st-gps').textContent        = gpsData.length;
+  document.getElementById('st-gps-p').textContent      = pct(gpsData.length,n) + '% coverage';
+  document.getElementById('st-acc').textContent        = avgAcc || '—';
+  document.getElementById('st-flagged').textContent    = flagged.length;
+  document.getElementById('st-nogps').textContent      = noGps.length;
+  document.getElementById('st-hour').textContent       = thisHour.length;
+}
+
+/* ════════════════════════
+   ALERTS
+════════════════════════ */
+function buildAlerts() {
+  const alerts = [];
+  const n = allData.length;
+  const flagged = allData.filter(d => d.gps?.accuracy && d.gps.accuracy > 50);
+  const noGps   = allData.filter(d => !d.gps?.lat);
+
+  // Researcher productivity check
+  const resMap = groupBy(allData, 'researcherName');
+  const today = new Date().toDateString();
+  Object.entries(resMap).forEach(([name, rows]) => {
+    const todayCount = rows.filter(d=>{
+      const ts=d.timestamp?.toDate?d.timestamp.toDate():null;
+      return ts&&ts.toDateString()===today;
+    }).length;
+    if (todayCount === 0 && name) {
+      alerts.push({ type:'warn', icon:'⏸', title:`${name} — No submissions today`, text:`This researcher has previously submitted but has not submitted anything today.` });
+    }
+  });
+
+  // GPS coverage
+  const gpsPct = pct(allData.filter(d=>d.gps?.lat).length, n);
+  if (gpsPct < 80) {
+    alerts.push({ type:'danger', icon:'📍', title:`GPS Coverage Low: ${gpsPct}%`, text:`${noGps.length} submissions are missing GPS coordinates. This may indicate the GPS guard was bypassed or field device issues.` });
+  } else {
+    alerts.push({ type:'good', icon:'✅', title:`GPS Coverage: ${gpsPct}%`, text:`GPS capture rate is within acceptable range. ${allData.filter(d=>d.gps?.lat).length} of ${n} submissions have verified location data.` });
+  }
+
+  // High inaccuracy
+  if (flagged.length > 0) {
+    alerts.push({ type:'warn', icon:'⚠️', title:`${flagged.length} submissions with GPS accuracy >50m`, text:`These submissions may have been collected indoors or with poor satellite signal. Review locations on the GPS table below.` });
+  }
+
+  // Duplicate time check — submissions within 60 seconds by same researcher
+  const byRes = groupBy(allData, 'researcherName');
+  let rapidCount = 0;
+  Object.entries(byRes).forEach(([name, rows]) => {
+    const sorted = rows
+      .map(d => ({ ...d, _time: d.timestamp?.toDate ? d.timestamp.toDate().getTime() : 0 }))
+      .sort((a,b) => a._time - b._time);
+    for (let i=1; i<sorted.length; i++) {
+      if (sorted[i]._time - sorted[i-1]._time < 60000 && sorted[i]._time > 0) rapidCount++;
+    }
+  });
+  if (rapidCount > 0) {
+    alerts.push({ type:'danger', icon:'🚨', title:`${rapidCount} rapid duplicate submissions detected`, text:`${rapidCount} submissions were made within 60 seconds of a prior submission by the same researcher. Review for data integrity.` });
+  }
+
+  // Time drift
+  const driftedCount = allData.filter(d => {
+    if (!d.submittedAt || !d.timestamp?.toDate) return false;
+    const server = d.timestamp.toDate().getTime();
+    const device = new Date(d.submittedAt).getTime();
+    return Math.abs(server - device) > 600000; // >10 min
+  }).length;
+  if (driftedCount > 0) {
+    alerts.push({ type:'warn', icon:'🕐', title:`${driftedCount} submissions with >10 min time drift`, text:`Device clock and server clock differ by more than 10 minutes. This may indicate backdated submissions.` });
+  }
+
+  if (!alerts.length) {
+    alerts.push({ type:'good', icon:'✅', title:'All systems normal', text:'No anomalies detected in the current dataset.' });
+  }
+
+  document.getElementById('alertList').innerHTML = alerts.map(a =>
+    `<div class="alert-item ${a.type}">
+      <div class="alert-icon">${a.icon}</div>
+      <div class="alert-body">
+        <div class="alert-title">${a.title}</div>
+        <div class="alert-text">${a.text}</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ════════════════════════
+   LEADERBOARD
+════════════════════════ */
+function buildLeaderboard() {
+  const byRes = groupBy(allData, 'researcherName');
+  const today = new Date().toDateString();
+  const maxCount = Math.max(...Object.values(byRes).map(r=>r.length), 1);
+
+  const sorted = Object.entries(byRes)
+    .map(([name, rows]) => {
+      const gpsRows = rows.filter(d => d.gps?.lat);
+      const accs    = rows.filter(d=>d.gps?.accuracy).map(d=>d.gps.accuracy);
+      const avgAcc  = accs.length ? Math.round(accs.reduce((a,b)=>a+b,0)/accs.length) : null;
+      const todayCnt= rows.filter(d=>{
+        const ts=d.timestamp?.toDate?d.timestamp.toDate():null;
+        return ts&&ts.toDateString()===today;
+      }).length;
+      const lastTs  = rows[0]?.timestamp?.toDate ? rows[0].timestamp.toDate() : null;
+      return { name, count: rows.length, gpsCount: gpsRows.length, avgAcc, todayCnt, lastTs, id: rows[0]?.researcherId||'—' };
+    })
+    .sort((a,b) => b.count - a.count);
+
+  document.getElementById('res-count-badge').textContent = sorted.length + ' researchers';
+  document.getElementById('res-leaderboard').innerHTML = sorted.map((r,i) => {
+    const rankCls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    const initial = (r.name||'?')[0].toUpperCase();
+    const gpsPct  = pct(r.gpsCount, r.count);
+    const gpsCls  = gpsPct >= 90 ? 'res-gps' : 'res-gps warn';
+    const timeAgo = r.lastTs ? fmtAgo(r.lastTs) : 'never';
+    return `
+    <div class="res-row">
+      <div class="res-rank ${rankCls}">${i+1}</div>
+      <div class="res-avatar" style="background:${avatarColor(r.name)}">${initial}</div>
+      <div class="res-info">
+        <div class="res-name">${esc(r.name)}</div>
+        <div class="res-id">${esc(r.id)}</div>
+      </div>
+      <div class="res-stats">
+        <div class="res-stat">
+          <div class="res-stat-val">${r.count}</div>
+          <div class="res-stat-lbl">total</div>
+        </div>
+        <div class="res-stat">
+          <div class="res-stat-val">${r.todayCnt}</div>
+          <div class="res-stat-lbl">today</div>
+        </div>
+        <div>
+          <span class="${gpsCls}">📍${gpsPct}%</span>
+          <div class="res-last">${timeAgo}</div>
+        </div>
+        <div class="res-bar-wrap">
+          <div class="res-bar-track"><div class="res-bar-fill" style="width:${pct(r.count,maxCount)}%"></div></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════
+   ACTIVITY FEED
+════════════════════════ */
+function buildActivityFeed() {
+  const recent = allData.slice(0, 30);
+  document.getElementById('activity-feed').innerHTML = recent.map(d => {
+    const ts = d.timestamp?.toDate ? d.timestamp.toDate() : null;
+    const lat = d.gps?.lat;
+    const acc = d.gps?.accuracy ? Math.round(d.gps.accuracy) : null;
+    const dotCls = !lat ? 'red' : acc && acc > 50 ? 'amber' : 'green';
+    const gpsLabel = !lat ? '⚠ No GPS' : acc ? `±${acc}m` : '✓ GPS';
+    return `
+    <div class="tl-item">
+      <div class="tl-dot ${dotCls}"></div>
+      <div class="tl-body">
+        <div class="tl-text"><strong>${esc(d.researcherName)||'Unknown'}</strong> — ${esc(d.constituency)||'—'} / ${esc(d.ward)||'—'}</div>
+        <div class="tl-time">${ts ? ts.toLocaleString() : '—'}</div>
+      </div>
+      <div class="tl-meta">${gpsLabel}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════
+   HOURLY HEATMAP
+════════════════════════ */
+function buildHeatmap() {
+  const counts = new Array(24).fill(0);
+  allData.forEach(d => {
+    const ts = d.timestamp?.toDate ? d.timestamp.toDate() : null;
+    if (ts) counts[ts.getHours()]++;
+  });
+  const maxC = Math.max(...counts, 1);
+  const heatmap = document.getElementById('hourly-heatmap');
+  const labels  = document.getElementById('hourly-labels');
+  heatmap.innerHTML = counts.map((c,h) => {
+    const alpha = 0.08 + (c/maxC)*0.85;
+    const bg = `rgba(45,212,191,${alpha})`;
+    return `<div class="hm-cell" style="background:${bg}" data-tip="${h}:00 — ${c} submissions"></div>`;
+  }).join('');
+  labels.innerHTML = counts.map((_,h) =>
+    `<div class="hm-label">${h}</div>`).join('');
+}
+
+/* ════════════════════════
+   DAILY OUTPUT
+════════════════════════ */
+function buildDailyOutput() {
+  const byRes = groupBy(allData, 'researcherName');
+  const now = Date.now();
+  const sevenDays = 7 * 86400000;
+
+  const items = Object.entries(byRes).map(([name, rows]) => {
+    const recent = rows.filter(d => {
+      const ts = d.timestamp?.toDate ? d.timestamp.toDate().getTime() : 0;
+      return ts && (now - ts) < sevenDays;
+    });
+    // count unique days
+    const days = new Set(recent.map(d => d.timestamp.toDate().toDateString())).size || 1;
+    const avgPerDay = (recent.length / days).toFixed(1);
+    return { name, avg: parseFloat(avgPerDay), total: rows.length };
+  }).sort((a,b) => b.avg - a.avg).slice(0,10);
+
+  const maxAvg = Math.max(...items.map(i=>i.avg), 1);
+  document.getElementById('daily-output').innerHTML = items.map(item => `
+    <div class="dur-row">
+      <div class="dur-name">${esc(item.name)}</div>
+      <div class="dur-track"><div class="dur-fill" style="width:${(item.avg/maxAvg)*100}%"></div></div>
+      <div class="dur-val">${item.avg}/d</div>
+    </div>`).join('');
+}
+
+/* ════════════════════════
+   GPS TABLES
+════════════════════════ */
+function buildGPSTables() {
+  const byRes = groupBy(allData, 'researcherName');
+  const tbody = document.getElementById('gps-acc-body');
+  const rows = Object.entries(byRes).map(([name, data]) => {
+    const gps  = data.filter(d=>d.gps?.lat);
+    const accs = data.filter(d=>d.gps?.accuracy).map(d=>d.gps.accuracy);
+    const avg  = accs.length ? Math.round(accs.reduce((a,b)=>a+b,0)/accs.length) : null;
+    const flagged = data.filter(d=>d.gps?.accuracy&&d.gps.accuracy>50).length;
+    const gpsPct = pct(gps.length, data.length);
+    return { name, total:data.length, gpsPct, avg, flagged };
+  }).sort((a,b)=>b.total-a.total);
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="main">${esc(r.name)}</td>
+      <td class="mono">${r.total}</td>
+      <td><span class="pill ${r.gpsPct>=90?'p-green':r.gpsPct>=70?'p-amber':'p-red'}">${r.gpsPct}%</span></td>
+      <td>${r.avg !== null ? accBadge(r.avg) : '<span style="color:var(--muted2)">—</span>'}</td>
+      <td class="mono" style="color:${r.flagged>0?'var(--amber)':'var(--muted2)'}">${r.flagged}</td>
+    </tr>`).join('');
+
+  // Anomalies
+  const anomalies = allData.filter(d => !d.gps?.lat || (d.gps?.accuracy && d.gps.accuracy > 50)).slice(0, 40);
+  document.getElementById('anomaly-count').textContent = anomalies.length + ' issues';
+  document.getElementById('anomaly-body').innerHTML = anomalies.map((d,i) => {
+    const ts = d.timestamp?.toDate ? d.timestamp.toDate().toLocaleString() : '—';
+    const issue = !d.gps?.lat ? '<span class="pill p-red">No GPS</span>' :
+                  `<span class="pill p-amber">±${Math.round(d.gps.accuracy)}m</span>`;
+    const loc = d.gps?.lat ? `${d.gps.lat.toFixed(4)}, ${d.gps.lng.toFixed(4)}` : '—';
+    return `<tr>
+      <td class="mono">${d._idx}</td>
+      <td class="main">${esc(d.researcherName)||'—'}</td>
+      <td class="mono" style="white-space:nowrap">${ts}</td>
+      <td class="mono">${loc}</td>
+      <td>${issue}</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ════════════════════════
+   RESEARCHER FILTER
+════════════════════════ */
+function populateResearcherFilter() {
+  const sel = document.getElementById('fResearcher');
+  const existing = [...sel.options].map(o=>o.value);
+  [...new Set(allData.map(d=>d.researcherName).filter(Boolean))].sort().forEach(name => {
+    if (!existing.includes(name)) {
+      const opt = document.createElement('option');
+      opt.value = name; opt.textContent = name;
+      sel.appendChild(opt);
+    }
+  });
+}
+
+/* ════════════════════════
+   FILTERS
+════════════════════════ */
+function applyFilters() {
+  const search  = document.getElementById('searchInput').value.toLowerCase();
+  const res     = document.getElementById('fResearcher').value;
+  const con     = document.getElementById('fConstituency').value;
+  const ward    = document.getElementById('fWard').value;
+  const gps     = document.getElementById('fGps').value;
+  const date    = document.getElementById('fDate').value;
+  const now     = new Date();
+  const todayStr = now.toDateString();
+  const yestStr  = new Date(now - 86400000).toDateString();
+  const weekAgo  = now - 7*86400000;
+
+  filtered = allData.filter(d => {
+    if (res  && d.researcherName !== res)  return false;
+    if (con  && d.constituency   !== con)  return false;
+    if (ward && d.ward           !== ward) return false;
+    if (gps) {
+      const acc = d.gps?.accuracy;
+      if (gps === 'good' && !(d.gps?.lat && acc && acc <= 20)) return false;
+      if (gps === 'warn' && !(d.gps?.lat && acc && acc > 20 && acc <= 50)) return false;
+      if (gps === 'poor' && !(d.gps?.lat && acc && acc > 50)) return false;
+      if (gps === 'none' && d.gps?.lat) return false;
+    }
+    if (date) {
+      const ts = d.timestamp?.toDate ? d.timestamp.toDate() : null;
+      if (!ts) return false;
+      if (date === 'today'     && ts.toDateString() !== todayStr) return false;
+      if (date === 'yesterday' && ts.toDateString() !== yestStr)  return false;
+      if (date === 'week'      && ts.getTime() < weekAgo)          return false;
+    }
+    if (search) {
+      const h = [d.researcherName, d.researcherId, d.ward, d.constituency].join(' ').toLowerCase();
+      if (!h.includes(search)) return false;
+    }
+    return true;
+  });
+  renderTable();
+}
+
+function clearFilters() {
+  ['searchInput','fResearcher','fConstituency','fWard','fGps','fDate'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  applyFilters();
+}
+
+/* ════════════════════════
+   TABLE
+════════════════════════ */
+function renderTable() {
+  const tbody  = document.getElementById('tableBody');
+  const scroll = document.getElementById('tableScroll');
+  const empty  = document.getElementById('emptyState');
+
+  if (!filtered.length) {
+    scroll.style.display = 'none'; empty.classList.add('show');
+    document.getElementById('rowCount').textContent   = '0 rows';
+    document.getElementById('footerInfo').textContent = 'No results';
+    return;
+  }
+  empty.classList.remove('show');
+  scroll.style.display = 'block';
+  document.getElementById('rowCount').textContent   = filtered.length + ' rows';
+  document.getElementById('footerInfo').textContent = `Showing ${filtered.length} of ${allData.length} submissions`;
+
+  tbody.innerHTML = '';
+  filtered.forEach(d => {
+    const ts      = d.timestamp?.toDate ? d.timestamp.toDate().toLocaleString() : '—';
+    const devTime = d.submittedAt ? new Date(d.submittedAt).toLocaleString() : '—';
+    const lat     = d.gps?.lat ?? null;
+    const lng     = d.gps?.lng ?? null;
+    const acc     = d.gps?.accuracy ? Math.round(d.gps.accuracy) : null;
+    const mapsUrl = lat && lng ? `https://www.google.com/maps?q=${lat},${lng}` : null;
+
+    // Time drift
+    let drift = '—';
+    if (d.submittedAt && d.timestamp?.toDate) {
+      const ms = Math.abs(d.timestamp.toDate().getTime() - new Date(d.submittedAt).getTime());
+      drift = ms < 60000 ? '<span class="pill p-green">&lt;1m</span>' :
+              ms < 600000 ? `<span class="pill p-amber">${Math.round(ms/60000)}m</span>` :
+              `<span class="pill p-red">${Math.round(ms/60000)}m</span>`;
+    }
+
+    const tr = document.createElement('tr');
+    tr.style.cursor = 'pointer';
+    tr.addEventListener('click', () => openModal(d));
+    tr.innerHTML = `
+      <td class="mono">${d._idx}</td>
+      <td class="mono" style="white-space:nowrap;font-size:11px">${ts}</td>
+      <td class="mono" style="white-space:nowrap;font-size:11px">${devTime}</td>
+      <td class="main">${esc(d.researcherName)||'—'}</td>
+      <td class="mono" style="color:var(--muted2)">${esc(d.researcherId)||'—'}</td>
+      <td class="main">${esc(d.constituency)||'—'}</td>
+      <td>${esc(d.ward)||'—'}</td>
+      <td class="mono">${lat !== null ? lat.toFixed(5) : '—'}</td>
+      <td class="mono">${lng !== null ? lng.toFixed(5) : '—'}</td>
+      <td>${acc !== null ? accBadge(acc) : '<span style="color:var(--muted2)">—</span>'}</td>
+      <td class="mono" style="font-size:10px;max-width:160px;" id="loc-${d._id}">${locationCache[d._id] ? makeLocBadge(locationCacheData[d._id]) : '<span class="loc-loading">…</span>'}</td>
+      <td>${drift}</td>
+      <td>${mapsUrl ? `<a class="map-link" href="${mapsUrl}" target="_blank" onclick="event.stopPropagation()">↗ Maps</a>` : '—'}</td>
+    `;
+    tbody.appendChild(tr);
+
+    if (lat && !locationCache[d._id]) {
+      getLocationData(lat, lng).then(locData => {
+        locationCache[d._id]     = locData.full;
+        locationCacheData[d._id] = locData;
+        const el = document.getElementById('loc-'+d._id);
+        if (el) el.innerHTML = makeLocBadge(locData);
+      });
+    }
+  });
+}
+
+/* ════════════════════════
+   SORT
+════════════════════════ */
+const COL_KEYS = ['_idx','_ts','_devts','researcherName','researcherId','constituency','ward','_lat','_lng','_acc'];
+function sortTable(ci) {
+  const ths = document.querySelectorAll('thead th');
+  ths.forEach(t=>t.classList.remove('sort-asc','sort-desc'));
+  if (sortCol===ci) sortDir = sortDir==='asc'?'desc':'asc';
+  else { sortCol=ci; sortDir='asc'; }
+  ths[ci].classList.add(sortDir==='asc'?'sort-asc':'sort-desc');
+  const key = COL_KEYS[ci]||'_idx';
+  filtered.sort((a,b)=>{
+    let av,bv;
+    if(key==='_ts')    {av=a.timestamp?.toDate?.()?.getTime()||0;bv=b.timestamp?.toDate?.()?.getTime()||0;}
+    else if(key==='_devts'){av=a.submittedAt?new Date(a.submittedAt).getTime():0;bv=b.submittedAt?new Date(b.submittedAt).getTime():0;}
+    else if(key==='_lat'){av=a.gps?.lat||0;bv=b.gps?.lat||0;}
+    else if(key==='_lng'){av=a.gps?.lng||0;bv=b.gps?.lng||0;}
+    else if(key==='_acc'){av=a.gps?.accuracy||999;bv=b.gps?.accuracy||999;}
+    else{av=a[key]||'';bv=b[key]||'';}
+    if(typeof av==='string')av=av.toLowerCase();
+    if(typeof bv==='string')bv=bv.toLowerCase();
+    if(av<bv)return sortDir==='asc'?-1:1;
+    if(av>bv)return sortDir==='asc'?1:-1;
+    return 0;
+  });
+  renderTable();
+}
+
+/* ════════════════════════
+   MODAL
+════════════════════════ */
+function openModal(d) {
+  const ts      = d.timestamp?.toDate ? d.timestamp.toDate().toLocaleString() : '—';
+  const devTime = d.submittedAt ? new Date(d.submittedAt).toLocaleString() : '—';
+  const lat     = d.gps?.lat;
+  const lng     = d.gps?.lng;
+  const acc     = d.gps?.accuracy ? Math.round(d.gps.accuracy) : null;
+  const mapsUrl = lat && lng ? `https://www.google.com/maps?q=${lat},${lng}` : null;
+
+  let driftMs = null;
+  if (d.submittedAt && d.timestamp?.toDate) {
+    driftMs = Math.abs(d.timestamp.toDate().getTime() - new Date(d.submittedAt).getTime());
+  }
+
+  document.getElementById('modalTitle').textContent = `Submission #${d._idx} — ${d.researcherName||'Unknown'}`;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-section-title">👤 Researcher</div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="detail-key">Name</div><div class="detail-val">${esc(d.researcherName)||'—'}</div></div>
+      <div class="detail-item"><div class="detail-key">Researcher ID</div><div class="detail-val" style="font-family:var(--mono)">${esc(d.researcherId)||'—'}</div></div>
+    </div>
+
+    <div class="modal-section-title">📍 GPS & Location</div>
+    <div id="modal-loc-block-${d._id}" style="margin-bottom:10px;">
+      ${locationCacheData[d._id] ? makeLocDetailBlock(locationCacheData[d._id], lat, lng) : `<div class="loc-loading" id="modal-loc-inner-${d._id}">⏳ Resolving exact place name…</div>`}
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="detail-key">Server Timestamp</div><div class="detail-val" style="font-family:var(--mono);font-size:11px">${ts}</div></div>
+      <div class="detail-item"><div class="detail-key">Device Submitted At</div><div class="detail-val" style="font-family:var(--mono);font-size:11px">${devTime}</div></div>
+      <div class="detail-item"><div class="detail-key">Time Drift</div><div class="detail-val">${driftMs !== null ? (driftMs < 60000 ? '< 1 minute' : Math.round(driftMs/60000)+' minutes') : '—'}</div></div>
+      <div class="detail-item"><div class="detail-key">GPS Accuracy</div><div class="detail-val">${acc !== null ? accBadge(acc) : '—'}</div></div>
+      <div class="detail-item"><div class="detail-key">Latitude</div><div class="detail-val" style="font-family:var(--mono)">${lat ? lat.toFixed(6) : '—'}</div></div>
+      <div class="detail-item"><div class="detail-key">Longitude</div><div class="detail-val" style="font-family:var(--mono)">${lng ? lng.toFixed(6) : '—'}</div></div>
+    </div>
+
+    <div class="modal-section-title">📋 Survey Location</div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="detail-key">Constituency</div><div class="detail-val">${esc(d.constituency)||'—'}</div></div>
+      <div class="detail-item"><div class="detail-key">Ward</div><div class="detail-val">${esc(d.ward)||'—'}</div></div>
+    </div>
+
+    <div class="modal-section-title">🔑 Metadata</div>
+    <div class="detail-grid">
+      <div class="detail-item full"><div class="detail-key">Response ID</div><div class="detail-val" style="font-family:var(--mono);font-size:11px">${d._id}</div></div>
+    </div>`;
+
+  document.getElementById('modalBg').classList.add('open');
+
+  // Resolve location in modal if not yet cached
+  if (lat && lng && !locationCacheData[d._id]) {
+    getLocationData(lat, lng).then(locData => {
+      locationCache[d._id]     = locData.full;
+      locationCacheData[d._id] = locData;
+      const block = document.getElementById(`modal-loc-block-${d._id}`);
+      if (block) block.innerHTML = makeLocDetailBlock(locData, lat, lng);
+      // Also update table cell
+      const cell = document.getElementById('loc-'+d._id);
+      if (cell) cell.innerHTML = makeLocBadge(locData);
+    });
+  }
+}
+function closeModal(e) { if(e.target===document.getElementById('modalBg')) closeModalDirect(); }
+function closeModalDirect() { document.getElementById('modalBg').classList.remove('open'); }
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModalDirect(); });
+
+/* ════════════════════════
+   DARK MODE TOGGLE
+════════════════════════ */
+let isDark = true;
+function toggleDarkMode() {
+  isDark = !isDark;
+  document.body.classList.toggle('light', !isDark);
+  const track = document.getElementById('dmTrack');
+  const label = document.getElementById('dmLabel');
+  track.classList.toggle('on', isDark);
+  label.textContent = isDark ? '🌙 Dark' : '☀️ Light';
+  localStorage.setItem('ecs_theme', isDark ? 'dark' : 'light');
+}
+// Restore preference
+(function() {
+  const saved = localStorage.getItem('ecs_theme');
+  if (saved === 'light') {
+    isDark = false;
+    document.body.classList.add('light');
+    document.getElementById('dmTrack')?.classList.remove('on');
+  } else {
+    document.getElementById('dmTrack')?.classList.add('on');
+  }
+})();
+
+/* ════════════════════════
+   GPS REVERSE GEOCODE
+   — Returns rich place object
+════════════════════════ */
+const LANDMARKS = [
+  { name: 'Embu University College',    lat: -0.5156, lng: 37.4564 },
+  { name: 'Embu Town CBD',              lat: -0.5309, lng: 37.4586 },
+  { name: 'Kirimari Secondary School',  lat: -0.5271, lng: 37.4546 },
+  { name: 'Embu County Referral Hospital', lat: -0.5291, lng: 37.4613 },
+  { name: 'Runyenjes Market',           lat: -0.4085, lng: 37.5729 },
+  { name: 'Mbeere South Constituency',  lat: -0.6540, lng: 37.6890 },
+  { name: 'Manyatta Constituency HQ',   lat: -0.5273, lng: 37.4559 },
+  { name: 'Kiambere Dam Area',          lat: -0.7200, lng: 37.6800 },
+];
+const R_EARTH = 6371000;
+function haversine(la1,lo1,la2,lo2){
+  const dLat=(la2-la1)*Math.PI/180, dLon=(lo2-lo1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R_EARTH*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+// Returns { short, full, street, village, ward, town, nearestLandmark }
+async function getLocationData(lat, lng) {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
+      { headers: { 'Accept-Language': 'en' } }
+    );
+    const rev = await res.json();
+    const addr = rev.address || {};
+
+    // Most-specific named feature
+    const street   = addr.amenity || addr.building || addr.tourism || addr.leisure
+                   || addr.shop || addr.office || addr.road || addr.pedestrian
+                   || addr.footway || addr.path || addr.highway || null;
+    // Locality
+    const village  = addr.village || addr.hamlet || addr.neighbourhood || addr.suburb || null;
+    const town     = addr.town || addr.city || addr.county || null;
+    const postcode = addr.postcode || null;
+
+    // Check nearest known landmark
+    let nearestLandmark = null, nearestDist = Infinity;
+    LANDMARKS.forEach(lm => {
+      const d = haversine(lat, lng, lm.lat, lm.lng);
+      if (d < nearestDist) { nearestDist = d; nearestLandmark = lm; }
+    });
+    const landmarkStr = (nearestLandmark && nearestDist < 2000)
+      ? `${nearestDist < 80 ? 'at' : Math.round(nearestDist)+'m from'} ${nearestLandmark.name}`
+      : null;
+
+    // Build short display name (most specific 2 parts)
+    const shortParts = [];
+    if (street) shortParts.push(street);
+    else if (village) shortParts.push(village);
+    if (town && !shortParts.includes(town)) shortParts.push(town);
+    if (!shortParts.length) {
+      const seg = rev.display_name?.split(',').slice(0,2).map(s=>s.trim()).join(', ');
+      if (seg) shortParts.push(seg);
+    }
+
+    // Build full display name
+    const fullParts = [];
+    if (street)  fullParts.push(street);
+    if (village && village !== street) fullParts.push(village);
+    if (addr.county && addr.county !== village) fullParts.push(addr.county);
+    if (town && !fullParts.includes(town)) fullParts.push(town);
+    if (landmarkStr) fullParts.push(landmarkStr);
+
+    return {
+      short: shortParts.join(', ') || 'Unknown Location',
+      full: fullParts.length ? fullParts.join(' · ') : (rev.display_name?.split(',').slice(0,4).join(', ') || 'Unknown'),
+      street: street || null,
+      village: village || null,
+      town: town || null,
+      ward: addr.county || null,
+      postcode,
+      nearestLandmark: landmarkStr,
+      osmId: rev.osm_id,
+      displayName: rev.display_name
+    };
+  } catch(e) { return { short: 'Unknown', full: 'Location unavailable', street:null, village:null, town:null, ward:null, nearestLandmark:null }; }
+}
+
+// Backward-compatible wrapper returning just the string
+async function getLocationName(lat, lng) {
+  const data = await getLocationData(lat, lng);
+  return data.full;
+}
+
+// Richer HTML badge for table cells
+function makeLocBadge(locData) {
+  if (!locData || locData.short === 'Unknown') return '<span class="loc-loading">Locating…</span>';
+  return `<span class="loc-name-badge" title="${(locData.full||'').replace(/"/g,'&quot;')}">
+    <span class="loc-pin">📍</span>${esc(locData.short)}
+  </span>`;
+}
+
+// Rich block for modal
+function makeLocDetailBlock(locData, lat, lng, osmLink) {
+  if (!locData) return `<div class="loc-loading">Loading place name…</div>`;
+  const rows = [];
+  if (locData.street)  rows.push(`<span style="color:var(--muted);font-size:10px;">STREET / PLACE</span> <span style="font-weight:600;">${esc(locData.street)}</span>`);
+  if (locData.village) rows.push(`<span style="color:var(--muted);font-size:10px;">VILLAGE / SUBURB</span> <span style="font-weight:600;">${esc(locData.village)}</span>`);
+  if (locData.ward)    rows.push(`<span style="color:var(--muted);font-size:10px;">WARD / COUNTY</span> <span style="font-weight:600;">${esc(locData.ward)}</span>`);
+  if (locData.town)    rows.push(`<span style="color:var(--muted);font-size:10px;">TOWN</span> <span style="font-weight:600;">${esc(locData.town)}</span>`);
+  if (locData.nearestLandmark) rows.push(`<span style="color:var(--accent);font-size:10px;">LANDMARK</span> <span style="font-weight:600;color:var(--accent);">${esc(locData.nearestLandmark)}</span>`);
+  return `
+    <div class="loc-detail-block">
+      <div class="loc-main">📍 ${esc(locData.short)}</div>
+      <div class="loc-coords">Lat ${lat?.toFixed(6)}, Lng ${lng?.toFixed(6)}</div>
+      ${rows.map(r=>`<div style="font-size:12px;margin-top:5px;">${r}</div>`).join('')}
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <a class="map-link" style="flex:1;text-align:center;padding:7px;background:var(--accent-l);border:1px solid rgba(45,212,191,.25);border-radius:var(--r);display:block;" href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=16" target="_blank">🗺 OpenStreetMap</a>
+      <a class="map-link" style="flex:1;text-align:center;padding:7px;background:var(--green-l);border:1px solid rgba(74,222,128,.25);border-radius:var(--r);display:block;color:var(--green);" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">📌 Google Maps</a>
+    </div>`;
+}
+
+/* ════════════════════════
+   EXPORTS
+════════════════════════ */
+const HEADERS = [
+  'Server Timestamp','Device Submitted At','Time Drift (min)',
+  'Researcher Name','Researcher ID',
+  'Constituency','Ward',
+  'GPS Lat','GPS Lng','GPS Accuracy (m)',
+  'GPS Status','Location Name','Response ID'
+];
+
+function buildRows(data) {
+  return data.map(d => {
+    const ts  = d.timestamp?.toDate ? d.timestamp.toDate().toISOString() : '';
+    const dev = d.submittedAt || '';
+    let drift = '';
+    if (d.submittedAt && d.timestamp?.toDate) {
+      drift = Math.round(Math.abs(d.timestamp.toDate().getTime()-new Date(d.submittedAt).getTime())/60000);
+    }
+    const acc = d.gps?.accuracy ? Math.round(d.gps.accuracy) : '';
+    const status = !d.gps?.lat ? 'No GPS' : acc > 50 ? 'Poor' : acc > 20 ? 'Warn' : 'Good';
+    return [
+      ts, dev, drift,
+      d.researcherName||'', d.researcherId||'',
+      d.constituency||'', d.ward||'',
+      d.gps?.lat??'', d.gps?.lng??'', acc,
+      status, locationCache[d._id]||'', d._id
+    ];
+  });
+}
+
+function csvRow(arr) {
+  return arr.map(v=>{
+    const s=String(v??'').replace(/"/g,'""');
+    return(s.includes(',')||s.includes('"')||s.includes('\n'))?`"${s}"`:s;
+  }).join(',');
+}
+
+function exportCSV() {
+  if(!filtered.length) return toast('No data','error');
+  const csv=[csvRow(HEADERS),...buildRows(filtered).map(csvRow)].join('\n');
+  dl(csv,`embu_field_${stamp()}.csv`,'text/csv');
+  toast('✓ CSV exported ('+filtered.length+' rows)','success');
+}
+
+function exportJSON() {
+  if(!filtered.length) return toast('No data','error');
+  const clean=filtered.map(d=>({
+    responseId: d._id,
+    serverTimestamp: d.timestamp?.toDate?d.timestamp.toDate().toISOString():null,
+    deviceTimestamp: d.submittedAt||null,
+    researcherName: d.researcherName||null,
+    researcherId: d.researcherId||null,
+    constituency: d.constituency||null,
+    ward: d.ward||null,
+    gps: d.gps||null,
+    locationName: locationCache[d._id]||null
+  }));
+  dl(JSON.stringify(clean,null,2),`embu_field_${stamp()}.json`,'application/json');
+  toast('✓ JSON exported','success');
+}
+
+function exportExcel() {
+  if(!filtered.length) return toast('No data','error');
+  const rows=buildRows(filtered);
+  let html='<table><tr>'+HEADERS.map(h=>`<th style="background:#0f1117;color:#fff;font-weight:700;padding:8px">${h}</th>`).join('')+'</tr>';
+  rows.forEach(r=>{html+='<tr>'+r.map(c=>`<td style="border:1px solid #e0e0e0;padding:6px">${String(c??'').replace(/&/g,'&amp;').replace(/</g,'&lt;')}</td>`).join('')+'</tr>';});
+  html+='</table>';
+  const blob=new Blob(['\ufeff'+html],{type:'application/vnd.ms-excel;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`embu_field_${stamp()}.xls`;a.click();
+  toast('✓ Excel exported ('+filtered.length+' rows)','success');
+}
+
+function dl(content,filename,mime){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download=filename;a.click();
+}
+function stamp(){return new Date().toISOString().slice(0,10);}
+
+/* ════════════════════════
+   HELPERS
+════════════════════════ */
+const esc = v => v ? String(v).replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
+const pct = (n,t) => t ? Math.round(n/t*100) : 0;
+const groupBy = (arr, key) => arr.reduce((m,d) => { const k=d[key]||'Unknown'; (m[k]=m[k]||[]).push(d); return m; }, {});
+
+function fmtAgo(date) {
+  const ms = Date.now() - date.getTime();
+  if (ms < 60000)   return 'just now';
+  if (ms < 3600000) return Math.round(ms/60000)+'m ago';
+  if (ms < 86400000)return Math.round(ms/3600000)+'h ago';
+  return Math.round(ms/86400000)+'d ago';
+}
+
+const AVATAR_COLORS = [
+  'linear-gradient(135deg,#2dd4bf,#34d399)',
+  'linear-gradient(135deg,#4ade80,#2dd4bf)',
+  'linear-gradient(135deg,#818cf8,#2dd4bf)',
+  'linear-gradient(135deg,#34d399,#4ade80)',
+  'linear-gradient(135deg,#fbbf24,#34d399)',
+  'linear-gradient(135deg,#2dd4bf,#818cf8)',
+];
+const avatarColor = name => AVATAR_COLORS[(name||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0) % AVATAR_COLORS.length];
+
+function accBadge(m) {
+  const cls = m<=20?'acc-good':m<=50?'acc-warn':'acc-poor';
+  const icon = m<=20?'✓':m<=50?'~':'⚠';
+  return `<span class="acc-badge ${cls}">${icon} ±${m}m</span>`;
+}
+
+function showLoader(v) {
+  document.getElementById('loader').classList.toggle('show', v);
+  if(v){
+    document.getElementById('tableScroll').style.display='none';
+    document.getElementById('emptyState').classList.remove('show');
+  }
+}
+function setStatus(msg) { document.getElementById('liveStatus').textContent = msg; }
+
+let tt;
+function toast(msg, type='') {
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast show'+(type?' '+type:'');
+  clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),3500);
+}
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>
