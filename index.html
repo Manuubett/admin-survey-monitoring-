@@ -454,7 +454,7 @@ body.light .fraud-panel{border-color:rgba(220,38,38,.35);}
       <!-- WhatsApp panel -->
       <div class="sm-channel-panel active" id="panel-whatsapp">
         <label class="sml">Phone number (with country code)</label>
-        <input class="sm-inp" id="wa-phone" type="tel" placeholder="+254 7XX XXX XXX">
+        <input class="sm-inp" id="wa-phone" type="tel" placeholder="+254 7XX XXX XXX" value="+254 ">
         <label class="sml">Message preview</label>
         <div class="sm-preview" id="wa-preview"></div>
         <div class="sm-action-row">
@@ -576,7 +576,7 @@ body.light .fraud-panel{border-color:rgba(220,38,38,.35);}
         </div>
         <div>
           <label class="if-label">Survey URL</label>
-          <input class="if-inp" id="inv-base-url" type="url" placeholder="https://yoursite.com/survey.html">
+          <input class="if-inp" id="inv-base-url" type="url" placeholder="https://embu-county-social-study.netlify.app/" value="https://embu-county-social-study.netlify.app/">
         </div>
         <div>
           <button class="btn purple" style="height:42px;padding:0 20px;font-size:13px;" onclick="generateInvite()">+ Generate Invite</button>
@@ -846,7 +846,7 @@ function doLogin() {
 /* ══════════════════════════════════════════
    INVITE LINK SYSTEM
    ══════════════════════════════════════════ */
-const SURVEY_BASE_URL_DEFAULT = 'https://yoursite.com/survey.html';
+const SURVEY_BASE_URL_DEFAULT = 'https://embu-county-social-study.netlify.app/';
 let currentSendToken = null, currentSendLink = null, currentSendName = null;
 
 function genToken() {
