@@ -59,6 +59,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 .btn.danger{background:var(--red);color:#fff;border-color:var(--red);}
 .btn.purple{background:var(--purple);color:#fff;border-color:var(--purple);}
 .btn.purple:hover{opacity:.88;}
+.btn.survey-close{background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fca5a5;border-color:#7f1d1d;font-size:11px;}
+.btn.survey-close:hover{background:#991b1b;color:#fecaca;}
+.btn.survey-closed-badge{background:var(--bg3);color:var(--muted2);border:1px dashed var(--border2);cursor:default;font-size:11px;}
 .btn:disabled{opacity:.4;pointer-events:none;}
 .admin-chip{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 12px 4px 4px;font-size:12px;color:var(--muted);}
 .admin-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;border:1px solid var(--border2);}
@@ -68,7 +71,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 .sec-head:first-child{margin-top:0;}
 .sec-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);}
 .sec-head::after{content:'';flex:1;height:1px;background:var(--border);}
-.stat-strip{display:grid;grid-template-columns:repeat(10,1fr);gap:10px;margin-bottom:24px;}
+.stat-strip{display:grid;grid-template-columns:repeat(11,1fr);gap:10px;margin-bottom:24px;}
 .stat-tile{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s;}
 .stat-tile:hover{border-color:var(--border2);transform:translateY(-1px);}
 .stat-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--r) var(--r) 0 0;}
@@ -107,6 +110,80 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 .cb-purple{background:var(--purple-l);color:var(--purple);}
 .cb-teal{background:var(--teal-l);color:var(--teal);}
 .cb-pink{background:var(--pink-l);color:var(--pink);}
+
+/* ═══════════════════════════════════════════
+   SURVEY CLOSED BANNER
+═══════════════════════════════════════════ */
+#surveyClosedBanner{display:none;background:rgba(127,29,29,.18);border:1.5px solid rgba(248,113,113,.4);border-left:4px solid var(--red);border-radius:var(--r2);padding:14px 20px;margin-bottom:20px;align-items:center;gap:14px;}
+#surveyClosedBanner.show{display:flex;}
+#surveyClosedBanner .scb-icon{font-size:22px;flex-shrink:0;}
+#surveyClosedBanner .scb-body{flex:1;}
+#surveyClosedBanner .scb-title{font-weight:800;color:var(--red);font-size:14px;margin-bottom:2px;}
+#surveyClosedBanner .scb-sub{color:var(--muted);font-size:12px;}
+
+/* ═══════════════════════════════════════════
+   ENUMERATOR PRINT REPORT
+═══════════════════════════════════════════ */
+#enumReportSection{display:none;background:var(--bg2);border:1.5px solid rgba(45,212,191,.3);border-left:4px solid var(--accent);border-radius:var(--r2);overflow:hidden;margin-bottom:20px;}
+#enumReportSection.show{display:block;}
+.rpt-head{padding:14px 20px;background:rgba(45,212,191,.07);border-bottom:1px solid rgba(45,212,191,.2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.rpt-title{font-weight:800;font-size:14px;color:var(--accent);}
+.rpt-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.rpt-search{padding:6px 11px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);font-family:var(--font);font-size:12px;color:var(--text);width:180px;}
+.rpt-search:focus{outline:none;border-color:var(--accent);}
+.rpt-search::placeholder{color:var(--muted2);}
+.rpt-filter{padding:6px 10px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);font-family:var(--font);font-size:12px;color:var(--text);cursor:pointer;}
+.rpt-filter:focus{outline:none;border-color:var(--accent);}
+.rpt-filter option{background:var(--bg3);}
+.rpt-body{padding:16px 20px;}
+.rpt-summary-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+.rpt-sum-tile{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;}
+.rpt-sum-label{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.rpt-sum-val{font-family:var(--mono);font-size:20px;font-weight:500;}
+.rpt-table-wrap{overflow-x:auto;}
+.rpt-table{width:100%;border-collapse:collapse;font-size:12px;}
+.rpt-table th{padding:9px 12px;background:var(--bg3);font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;}
+.rpt-table th:hover{color:var(--accent);}
+.rpt-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--muted);vertical-align:middle;white-space:nowrap;}
+.rpt-table tr:last-child td{border-bottom:none;}
+.rpt-table tr:hover td{background:rgba(255,255,255,.02);}
+.rpt-table td.main{color:var(--text);font-weight:600;}
+.rpt-table td.mono{font-family:var(--mono);font-size:10.5px;}
+.rpt-rank-badge{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;}
+.rnk-gold{background:var(--amber-l);color:var(--amber);border:1px solid var(--amber);}
+.rnk-silver{background:var(--accent-l);color:var(--accent);border:1px solid var(--accent);}
+.rnk-bronze{background:var(--orange-l);color:var(--orange);border:1px solid var(--orange);}
+.rnk-normal{background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.rpt-bar-track{width:100px;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;display:inline-block;vertical-align:middle;}
+.rpt-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--teal));}
+.rpt-err-badge{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;white-space:nowrap;}
+.rpt-err-none{background:var(--green-l);color:var(--green);}
+.rpt-err-some{background:var(--amber-l);color:var(--amber);}
+.rpt-err-many{background:var(--red-l);color:var(--red);}
+.rpt-places-cell{max-width:220px;white-space:normal;line-height:1.4;}
+.rpt-place-pill{display:inline-block;font-family:var(--mono);font-size:9px;padding:1px 6px;border-radius:8px;background:var(--accent-l);color:var(--accent);margin:1px 2px 1px 0;}
+.rpt-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.rpt-note{font-size:11px;color:var(--muted2);}
+
+@media print {
+  body{background:#fff !important;color:#000 !important;}
+  .topbar,.stat-strip,.invite-panel,.ward-violations-panel,.fraud-panel,
+  .grid-2,.grid-3,.grid-14,.toolbar,.table-panel,#loginWall,
+  #surveyClosedBanner,.rpt-controls,.rpt-footer,.btn,
+  .sec-head:not(#rptSecHead),.page > *:not(#enumReportSection):not(#rptSecHead){display:none !important;}
+  #enumReportSection{display:block !important;border:none !important;margin:0 !important;}
+  .rpt-head{background:#f5f5f5 !important;border-bottom:2px solid #ccc !important;}
+  .rpt-title{color:#000 !important;}
+  .rpt-table th{background:#eee !important;color:#333 !important;}
+  .rpt-table td{color:#333 !important;}
+  .rpt-bar-track{border:1px solid #ccc !important;}
+  .rpt-bar-fill{background:#333 !important;}
+  .page{padding:0 !important;}
+  #rptSecHead{display:flex !important;margin-top:0 !important;}
+  .rpt-summary-strip{margin-bottom:12px !important;}
+  .rpt-sum-tile{background:#f5f5f5 !important;border:1px solid #ccc !important;}
+}
+
 .invite-panel{background:var(--bg2);border:1.5px solid rgba(129,140,248,.35);border-left:4px solid var(--purple);border-radius:var(--r2);overflow:hidden;margin-bottom:20px;}
 .invite-panel-head{padding:14px 18px;background:rgba(129,140,248,.07);border-bottom:1px solid rgba(129,140,248,.2);display:flex;align-items:center;justify-content:space-between;}
 .invite-panel-title{font-weight:800;font-size:13px;color:var(--purple);display:flex;align-items:center;gap:8px;}
@@ -136,6 +213,7 @@ select.if-inp option{background:var(--bg3);}
 .inv-status.active{background:var(--green-l);color:var(--green);}
 .inv-status.used{background:var(--muted2);color:var(--bg2);}
 .inv-status.expired{background:var(--red-l);color:var(--red);}
+.inv-status.inactive{background:rgba(127,29,29,.25);color:#fca5a5;}
 .copy-link-wrap{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:6px 10px;max-width:280px;}
 .copy-link-text{font-family:var(--mono);font-size:10px;color:var(--accent);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .copy-btn{font-size:11px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px;white-space:nowrap;font-family:var(--font);}
@@ -148,9 +226,21 @@ select.if-inp option{background:var(--bg3);}
 .sch-copy{background:var(--purple-l);border-color:rgba(129,140,248,.35);color:var(--purple);}
 .revoke-btn{font-size:11px;font-weight:700;color:var(--red);background:none;border:none;cursor:pointer;padding:3px 8px;border-radius:4px;font-family:var(--font);}
 .revoke-btn:hover{background:var(--red-l);}
+/* ── Reactivate button ── */
+.reactivate-btn{font-size:11px;font-weight:700;color:var(--green);background:none;border:none;cursor:pointer;padding:3px 8px;border-radius:4px;font-family:var(--font);}
+.reactivate-btn:hover{background:var(--green-l);}
 .ward-pills{display:flex;flex-wrap:wrap;gap:4px;}
 .ward-pill{font-family:var(--mono);font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;background:var(--purple-l);color:var(--purple);}
 .inv-note{font-size:11px;color:var(--muted2);margin-top:12px;padding:10px 12px;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--border2);line-height:1.6;}
+.invite-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);}
+.invite-toolbar .sel-count{font-family:var(--mono);font-size:11px;color:var(--purple);font-weight:700;}
+.bulk-del-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:var(--r);font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;border:1px solid var(--red);background:var(--red-l);color:var(--red);transition:all .15s;}
+.bulk-del-btn:hover{background:var(--red);color:#fff;}
+.bulk-del-btn:disabled{opacity:.35;pointer-events:none;}
+.deactivate-all-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:var(--r);font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;border:1px solid rgba(248,113,113,.5);background:rgba(127,29,29,.15);color:#fca5a5;transition:all .15s;}
+.deactivate-all-btn:hover{background:rgba(127,29,29,.35);color:#fecaca;}
+.deactivate-all-btn:disabled{opacity:.35;pointer-events:none;}
+.inv-check{accent-color:var(--purple);cursor:pointer;width:15px;height:15px;}
 .ward-edit-btn{font-size:10px;font-weight:600;color:var(--muted2);background:none;border:1px solid var(--border);cursor:pointer;padding:2px 7px;border-radius:4px;font-family:var(--font);margin-left:4px;}
 .ward-edit-btn:hover{color:var(--accent);border-color:var(--accent);}
 .ward-edit-form{display:none;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px;margin-top:6px;min-width:240px;}
@@ -223,7 +313,6 @@ textarea.sm-inp{min-height:100px;resize:vertical;}
 .quota-fill.safe{background:var(--teal);}
 .quota-fill.warn{background:var(--amber);}
 .quota-fill.over{background:var(--red);}
-.quota-val{font-family:var(--mono);font-size:11px;color:var(--muted);width:50px;text-align:right;flex-shrink:0;}
 .res-list{display:flex;flex-direction:column;gap:8px;}
 .res-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);transition:border-color .15s;}
 .res-row:hover{border-color:var(--border2);}
@@ -335,6 +424,7 @@ tbody td.mono{font-family:var(--mono);font-size:10.5px;color:var(--muted2);}
 .p-blue{background:var(--accent-l);color:var(--accent);}
 .p-purple{background:var(--purple-l);color:var(--purple);}
 .p-gray{background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.p-orange{background:var(--orange-l);color:var(--orange);}
 .loader-wrap{display:none;flex-direction:column;align-items:center;justify-content:center;padding:52px;gap:14px;}
 .loader-wrap.show{display:flex;}
 .spinner{width:32px;height:32px;border:2.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
@@ -382,9 +472,13 @@ body.light .topbar{box-shadow:0 1px 4px rgba(0,0,0,.08);}
 body.light .login-card{box-shadow:0 8px 40px rgba(0,0,0,.1);}
 body.light thead th{background:#eef2f7;}
 body.light tbody tr:hover{background:rgba(0,0,0,.025);}
-@media(max-width:1300px){.stat-strip{grid-template-columns:repeat(5,1fr);}}
+@media(max-width:1300px){.stat-strip{grid-template-columns:repeat(6,1fr);}}
 @media(max-width:900px){.stat-strip{grid-template-columns:repeat(4,1fr);}.grid-2,.grid-3,.grid-14{grid-template-columns:1fr;}.page{padding:14px 14px 40px;}.topbar{padding:0 16px;}}
 @media(max-width:580px){.stat-strip{grid-template-columns:repeat(2,1fr);}}
+
+/* ── Invite section slide transition ── */
+#inviteSectionWrap{transition:opacity .2s ease;}
+#inviteSectionWrap.hiding{opacity:0;pointer-events:none;}
 </style>
 </head>
 <body>
@@ -470,7 +564,17 @@ body.light tbody tr:hover{background:rgba(0,0,0,.025);}
     <div class="live-badge"><div class="live-dot"></div><span id="liveStatus">Connecting…</span></div>
   </div>
   <div class="topbar-right">
-    <button class="btn purple" onclick="document.getElementById('inviteSection').scrollIntoView({behavior:'smooth'})">🔗 Invite Enumerators</button>
+    <!-- Report toggle -->
+    <div class="dm-toggle" id="reportToggle" onclick="toggleEnumReport()" title="Show/hide printable enumerator report">
+      <div class="dm-track" id="reportTrack"><div class="dm-knob"></div></div>
+      <span id="reportLabel">📋 Enumerator Report</span>
+    </div>
+    <!-- ── NEW: Invite Links toggle ── -->
+    <div class="dm-toggle" id="inviteToggle" onclick="toggleInviteSection()" title="Show/hide invite links &amp; fraud panels">
+      <div class="dm-track on" id="inviteTrack"><div class="dm-knob"></div></div>
+      <span id="inviteToggleLabel">🔗 Invite Links</span>
+    </div>
+    <button class="btn purple" onclick="(function(){const w=document.getElementById('inviteSectionWrap');if(w&&w.style.display==='none'){inviteSectionVisible=false;toggleInviteSection();}document.getElementById('inviteSection').scrollIntoView({behavior:'smooth'});})()">🔗 Invite Enumerators</button>
     <div class="dm-toggle" id="dmToggle" onclick="toggleDarkMode()">
       <div class="dm-track" id="dmTrack"><div class="dm-knob"></div></div>
       <span id="dmLabel">🌙 Dark</span>
@@ -487,6 +591,69 @@ body.light tbody tr:hover{background:rgba(0,0,0,.025);}
 </div>
 
 <div class="page">
+
+  <!-- Survey Closed Banner -->
+  <div id="surveyClosedBanner">
+    <div class="scb-icon">🔒</div>
+    <div class="scb-body">
+      <div class="scb-title">Survey Closed — All Invite Links Deactivated</div>
+      <div class="scb-sub" id="scbSubText">Survey practice ended. All active invite links have been revoked. New submissions via existing links are now blocked.</div>
+    </div>
+    <button class="btn" style="font-size:11px;" onclick="reopenSurvey()">↺ Re-open Survey</button>
+  </div>
+
+  <!-- Enumerator Report -->
+  <div class="sec-head" id="rptSecHead" style="display:none;"><span class="sec-title">📋 Enumerator Performance Report</span></div>
+  <div id="enumReportSection">
+    <div class="rpt-head">
+      <div class="rpt-title">📋 Enumerator Performance Report — ECS-2026</div>
+      <div class="rpt-controls">
+        <input class="rpt-search" id="rptSearch" type="text" placeholder="Search name…" oninput="renderReport()">
+        <select class="rpt-filter" id="rptFilterErrors" onchange="renderReport()">
+          <option value="">All error levels</option>
+          <option value="clean">✅ Clean (0 errors)</option>
+          <option value="some">⚠️ Minor (1-3 errors)</option>
+          <option value="many">🔴 Major (4+ errors)</option>
+        </select>
+        <select class="rpt-filter" id="rptSortBy" onchange="renderReport()">
+          <option value="rank">Sort: Rank (most submissions)</option>
+          <option value="errors">Sort: Most errors</option>
+          <option value="name">Sort: Name A–Z</option>
+          <option value="gps">Sort: GPS% ↑</option>
+        </select>
+        <button class="btn primary" onclick="window.print()" style="font-size:11px;">🖨 Print Report</button>
+        <button class="btn" onclick="exportReportCSV()" style="font-size:11px;">⬇ Export CSV</button>
+      </div>
+    </div>
+    <div class="rpt-body">
+      <div class="rpt-summary-strip" id="rptSummaryStrip">
+        <div class="rpt-sum-tile"><div class="rpt-sum-label">Total Enumerators</div><div class="rpt-sum-val blue" id="rptSumEnum" style="color:var(--accent)">—</div></div>
+        <div class="rpt-sum-tile"><div class="rpt-sum-label">Total Submissions</div><div class="rpt-sum-val" id="rptSumTotal" style="color:var(--text)">—</div></div>
+        <div class="rpt-sum-tile"><div class="rpt-sum-label">Total Integrity Errors</div><div class="rpt-sum-val" id="rptSumErrors" style="color:var(--red)">—</div></div>
+        <div class="rpt-sum-tile"><div class="rpt-sum-label">Clean Enumerators</div><div class="rpt-sum-val" id="rptSumClean" style="color:var(--green)">—</div></div>
+      </div>
+      <div class="rpt-table-wrap">
+        <table class="rpt-table" id="rptTable">
+          <thead>
+            <tr>
+              <th>Rank</th><th>Enumerator</th><th>Researcher ID</th><th>Assigned Wards</th>
+              <th>Total Sub.</th><th>Today</th><th>GPS%</th><th>Avg Accuracy</th>
+              <th>Integrity Errors</th><th>Error Breakdown</th><th>Wards/Places Visited</th><th>Last Active</th>
+            </tr>
+          </thead>
+          <tbody id="rptTableBody"><tr><td colspan="12" style="text-align:center;padding:28px;color:var(--muted2);">Load data first (click ↻ Refresh)</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="rpt-footer">
+      <span class="rpt-note" id="rptNote">Generated: —</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn primary" onclick="window.print()" style="font-size:11px;">🖨 Print</button>
+        <button class="btn" onclick="exportReportCSV()" style="font-size:11px;">⬇ CSV</button>
+      </div>
+    </div>
+  </div>
+
   <div class="stat-strip">
     <div class="stat-tile st-blue"><div class="stat-label">Total Submissions</div><div class="stat-value blue" id="st-total">—</div><div class="stat-sub">Updated <span id="st-updated">—</span></div></div>
     <div class="stat-tile st-green"><div class="stat-label">Today's Submissions</div><div class="stat-value green" id="st-today">—</div><div class="stat-sub" id="st-today-res">— researchers</div></div>
@@ -497,50 +664,70 @@ body.light tbody tr:hover{background:rgba(0,0,0,.025);}
     <div class="stat-tile st-red"><div class="stat-label">Spatial Conflicts</div><div class="stat-value red" id="st-conflicts">—</div><div class="stat-sub">overlapping locations</div></div>
     <div class="stat-tile st-pink"><div class="stat-label">GPS Overrides</div><div class="stat-value pink" id="st-skipped">—</div><div class="stat-sub">supervisor skips</div></div>
     <div class="stat-tile st-red"><div class="stat-label">Rapid Dupes</div><div class="stat-value red" id="st-rapid">—</div><div class="stat-sub">&lt;60s gap</div></div>
+    <div class="stat-tile st-orange"><div class="stat-label">Short Interview Gaps</div><div class="stat-value orange" id="st-shortgap">—</div><div class="stat-sub">&lt;20min · too fast to walk + interview</div></div>
     <div class="stat-tile st-amber"><div class="stat-label">Ward Violations</div><div class="stat-value amber" id="st-ward-v">—</div><div class="stat-sub">GPS-based · enumerator zone</div></div>
   </div>
 
+  <!-- ═══════════════════════════════════════
+       COLLAPSIBLE INVITE + FRAUD SECTION
+  ═══════════════════════════════════════ -->
   <div class="sec-head" id="inviteSection"><span class="sec-title">🔗 Enumerator Invite Links &amp; Ward Assignments</span></div>
-  <div class="invite-panel" style="margin-bottom:20px;">
-    <div class="invite-panel-head">
-      <div class="invite-panel-title">📨 Generate &amp; Send Researcher Invite Links</div>
-      <span class="card-badge cb-purple" id="invite-count-badge">Loading…</span>
-    </div>
-    <div class="invite-body">
-      <div class="invite-form-wide">
-        <div><label class="if-label">Researcher name</label><input class="if-inp" id="inv-name" type="text" placeholder="Full name (optional)"></div>
-        <div><label class="if-label">Validity</label><select class="if-inp" id="inv-expiry"><option value="24">24 hours</option><option value="48">48 hours</option><option value="72">72 hours</option><option value="168" selected>7 days</option><option value="336">14 days</option><option value="720">30 days</option><option value="0">No expiry</option></select></div>
-        <div><label class="if-label">Survey URL</label><input class="if-inp" id="inv-base-url" type="url" placeholder="https://..." value="https://embu-county-social-study.netlify.app/"></div>
-        <div><label class="if-label">Assigned Ward(s) <span style="color:var(--muted2);font-weight:400;font-size:9px;">(optional)</span></label><div class="ward-checkboxes" id="inv-ward-checks"></div></div>
-        <div style="padding-top:22px;"><button class="btn purple" style="height:42px;padding:0 20px;font-size:13px;white-space:nowrap;" onclick="generateInvite()">+ Generate Invite</button></div>
-      </div>
-      <div style="overflow-x:auto;">
-        <table class="invite-table" id="inviteTable">
-          <thead><tr><th>Token</th><th>Researcher</th><th>Assigned Wards</th><th>Created</th><th>Expires</th><th>Status</th><th>Used By</th><th>Invite Link</th><th>Send</th><th>Action</th></tr></thead>
-          <tbody id="inviteTableBody"><tr><td colspan="10" style="text-align:center;padding:28px;color:var(--muted2);">Loading invites…</td></tr></tbody>
-        </table>
-      </div>
-      <div class="inv-note">💡 Each invite link is single-use. <strong>Assigned wards</strong> are stored on the token and enforced in the survey via GPS geofencing — the enumerator is checked to be physically inside their assigned ward (not just the respondent's self-reported ward). Leave wards blank for unrestricted access.</div>
-    </div>
-  </div>
+  <div id="inviteSectionWrap">
 
-  <div class="sec-head"><span class="sec-title">🗺 Ward Assignment Violations</span></div>
-  <div class="ward-violations-panel" style="margin-bottom:20px;">
-    <div class="ward-violations-head">
-      <div class="ward-violations-title">⚠️ Enumerators Outside Assigned Ward (GPS-based)</div>
-      <span class="card-badge cb-amber" id="ward-v-count-badge">Analysing…</span>
+    <div class="invite-panel" style="margin-bottom:20px;">
+      <div class="invite-panel-head">
+        <div class="invite-panel-title">📨 Generate &amp; Send Researcher Invite Links</div>
+        <span class="card-badge cb-purple" id="invite-count-badge">Loading…</span>
+      </div>
+      <div class="invite-body">
+        <div class="invite-form-wide">
+          <div><label class="if-label">Researcher name</label><input class="if-inp" id="inv-name" type="text" placeholder="Full name (optional)"></div>
+          <div><label class="if-label">Validity</label><select class="if-inp" id="inv-expiry"><option value="24">24 hours</option><option value="48">48 hours</option><option value="72">72 hours</option><option value="168" selected>7 days</option><option value="336">14 days</option><option value="720">30 days</option><option value="0">No expiry</option></select></div>
+          <div><label class="if-label">Survey URL</label><input class="if-inp" id="inv-base-url" type="url" placeholder="https://..." value="https://embu-county-social-study.netlify.app/"></div>
+          <div><label class="if-label">Assigned Ward(s) <span style="color:var(--muted2);font-weight:400;font-size:9px;">(optional)</span></label><div class="ward-checkboxes" id="inv-ward-checks"></div></div>
+          <div style="padding-top:22px;"><button class="btn purple" id="generateInviteBtn" style="height:42px;padding:0 20px;font-size:13px;white-space:nowrap;" onclick="generateInvite()">+ Generate Invite</button></div>
+        </div>
+        <div class="invite-toolbar">
+          <label class="dm-toggle" id="hideInactiveToggle" onclick="toggleHideInactive()" style="margin:0;">
+            <div class="dm-track" id="hideInactiveTrack"><div class="dm-knob"></div></div>
+            <span id="hideInactiveLabel">👁 Show all</span>
+          </label>
+          <span class="sel-count" id="invSelCount">0 selected</span>
+          <button class="bulk-del-btn" id="bulkDeleteBtn" onclick="bulkDeleteInvites()" disabled>🗑 Delete Selected</button>
+          <button class="deactivate-all-btn" id="deactivateAllBtn" onclick="deactivateAllActiveInvites()" title="Revoke every currently-active invite link — use when survey practice is over">
+            🔒 Deactivate All Active Links
+          </button>
+          <span style="font-size:10px;color:var(--muted2);">Active links are protected from deletion. Revoke first, then delete. Revoked links can be re-activated individually.</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="invite-table" id="inviteTable">
+            <thead><tr><th style="width:30px;"><input type="checkbox" class="inv-check" id="invSelectAll" onclick="toggleSelectAllInvites(this)"></th><th>Token</th><th>Researcher</th><th>Assigned Wards</th><th>Created</th><th>Expires</th><th>Status</th><th>Used By</th><th>Invite Link</th><th>Send</th><th>Action</th></tr></thead>
+            <tbody id="inviteTableBody"><tr><td colspan="11" style="text-align:center;padding:28px;color:var(--muted2);">Loading invites…</td></tr></tbody>
+          </table>
+        </div>
+        <div class="inv-note">💡 Each invite link is single-use. <strong>Assigned wards</strong> are stored on the token and enforced in the survey via GPS geofencing. Leave wards blank for unrestricted access. Use <strong>🔒 Deactivate All Active Links</strong> when the survey practice period is over. Revoked links can be individually <strong>re-activated</strong> via the Action column.</div>
+      </div>
     </div>
-    <div class="ward-v-list" id="wardViolationList"><div class="ward-v-empty">Loading ward assignment data…</div></div>
-  </div>
 
-  <div class="sec-head"><span class="sec-title">🚨 Fraud Intelligence</span></div>
-  <div class="fraud-panel" style="margin-bottom:20px;">
-    <div class="fraud-panel-head">
-      <div class="fraud-panel-title">⚠️ Integrity Alerts — Flagged Records</div>
-      <span class="card-badge cb-red" id="fraud-count-badge">Analysing…</span>
+    <div class="sec-head"><span class="sec-title">🗺 Ward Assignment Violations</span></div>
+    <div class="ward-violations-panel" style="margin-bottom:20px;">
+      <div class="ward-violations-head">
+        <div class="ward-violations-title">⚠️ Enumerators Outside Assigned Ward (GPS-based)</div>
+        <span class="card-badge cb-amber" id="ward-v-count-badge">Analysing…</span>
+      </div>
+      <div class="ward-v-list" id="wardViolationList"><div class="ward-v-empty">Loading ward assignment data…</div></div>
     </div>
-    <div class="fraud-list" id="fraudList"><div class="fraud-empty">Loading fraud analysis…</div></div>
-  </div>
+
+    <div class="sec-head"><span class="sec-title">🚨 Fraud Intelligence</span></div>
+    <div class="fraud-panel" style="margin-bottom:20px;">
+      <div class="fraud-panel-head">
+        <div class="fraud-panel-title">⚠️ Integrity Alerts — Flagged Records</div>
+        <span class="card-badge cb-red" id="fraud-count-badge">Analysing…</span>
+      </div>
+      <div class="fraud-list" id="fraudList"><div class="fraud-empty">Loading fraud analysis…</div></div>
+    </div>
+
+  </div><!-- /inviteSectionWrap -->
 
   <div class="sec-head"><span class="sec-title">📊 Daily Quota &amp; Field Alerts</span></div>
   <div class="grid-2" style="margin-bottom:20px;">
@@ -584,7 +771,7 @@ body.light tbody tr:hover{background:rgba(0,0,0,.025);}
       <div class="card-head"><div><div class="card-title">🗺 GPS Accuracy by Researcher</div></div></div>
       <div class="card-body" style="max-height:320px;overflow-y:auto;">
         <table class="gps-table" id="gps-acc-table">
-          <thead><tr><th>Researcher</th><th>Total</th><th>GPS%</th><th>Avg Acc</th><th>Flagged</th><th>Skipped</th><th>Conflicts</th><th>Ward Violate</th></tr></thead>
+          <thead><tr><th>Researcher</th><th>Total</th><th>GPS%</th><th>Avg Acc</th><th>Flagged</th><th>Skipped</th><th>Conflicts</th><th>Short Gap</th><th>Ward Violate</th></tr></thead>
           <tbody id="gps-acc-body"></tbody>
         </table>
       </div>
@@ -614,7 +801,7 @@ body.light tbody tr:hover{background:rgba(0,0,0,.025);}
       <optgroup label="Mbeere North"><option>Nthawa</option><option>Muminji</option><option>Evurore</option></optgroup>
     </select>
     <select class="fsel" id="fGps" onchange="applyFilters()"><option value="">All GPS</option><option value="good">✓ Good ≤20m</option><option value="warn">~ Warn ≤50m</option><option value="poor">⚠ Poor &gt;50m</option><option value="none">✗ No GPS</option></select>
-    <select class="fsel" id="fFraud" onchange="applyFilters()"><option value="">All Records</option><option value="conflict">Spatial Conflicts</option><option value="skipped">GPS Overrides</option><option value="rapid">Rapid Submissions</option><option value="ward_violation">Ward Violations</option></select>
+    <select class="fsel" id="fFraud" onchange="applyFilters()"><option value="">All Records</option><option value="conflict">Spatial Conflicts</option><option value="skipped">GPS Overrides</option><option value="rapid">Rapid Submissions</option><option value="shortgap">Short Interview Gap (&lt;20min)</option><option value="ward_violation">Ward Violations</option></select>
     <select class="fsel" id="fDate" onchange="applyFilters()"><option value="">All Dates</option><option value="today">Today</option><option value="yesterday">Yesterday</option><option value="week">This Week</option></select>
     <button class="btn" onclick="clearFilters()">✕ Clear</button>
   </div>
@@ -681,8 +868,9 @@ const firebaseConfig={apiKey:"AIzaSyAXeNgPLKFgfxBKNta7UlGzHW-bjWzghas",authDomai
 firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore(),auth=firebase.auth();
 
-const ADMIN_EMAILS=["admin@visiontrack.co.ke","supervisor@embu.go.ke","bettemanuel49@gmail.com","nicholaskasanga2@gmail.com"];
+const ADMIN_EMAILS=["admin@visiontrack.co.ke","supervisor@embu.go.ke","bettemanuel49@gmail.com","nicholaskasanga2@gmail.com","lenny.kivuti@geoafrica.com","senatorkivuti@gmail.com"];
 let currentAdmin=null,allInviteMap={},resWardMap={};
+let selectedInviteTokens=new Set(),hideInactiveInvites=false,_lastInvites=[];
 
 async function adminGoogleSignIn(){
   const btn=document.getElementById('adminGoogleBtn'),spin=document.getElementById('loginSpinner'),txt=document.getElementById('loginBtnText'),err=document.getElementById('lerr');
@@ -704,7 +892,7 @@ auth.onAuthStateChanged(async user=>{
   const chip=document.getElementById('adminChip');chip.style.display='flex';
   document.getElementById('adminName').textContent=user.displayName||email;
   if(user.photoURL) document.getElementById('adminAvatar').src=user.photoURL;
-  loadData();loadInvites();
+  loadData();loadInvites();checkSurveyClosed();
 });
 
 const ALL_WARDS=['Ruguru/Ngandori','Kithimu','Nginda','Mbeti North','Kirimari','Gaturi South','Gaturi North','Kagaari South','Kagaari North','Central Ward','Kyeni North','Kyeni South','Mwea','Makima','Mbeti South','Mavuria','Kiambere','Nthawa','Muminji','Evurore'];
@@ -719,6 +907,234 @@ function getSelectedInviteWards(){return [...document.querySelectorAll('#inv-war
 const SURVEY_BASE_URL_DEFAULT='https://embu-county-social-study.netlify.app/';
 let currentSendToken=null,currentSendLink=null,currentSendName=null;
 function genToken(){const ch='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';let t='';for(let i=0;i<20;i++) t+=ch[Math.floor(Math.random()*ch.length)];return t;}
+
+/* ════════════════════════════════════════════
+   SURVEY CLOSED / DEACTIVATE ALL LOGIC
+════════════════════════════════════════════ */
+async function checkSurveyClosed(){
+  try{
+    const snap=await db.collection('_meta').doc('surveyClosed').get();
+    if(snap.exists&&snap.data().closed){
+      showSurveyClosedBanner(snap.data());
+      lockInviteGeneration(true);
+    }
+  }catch(e){}
+}
+
+function showSurveyClosedBanner(data){
+  const banner=document.getElementById('surveyClosedBanner');
+  banner.classList.add('show');
+  if(data&&data.closedAt){
+    const ts=data.closedAt.toDate?data.closedAt.toDate():new Date(data.closedAt);
+    document.getElementById('scbSubText').textContent=
+      'Survey closed by '+esc(data.closedBy||'admin')+' on '+ts.toLocaleString()+
+      '. All active invite links were revoked ('+(data.revokedCount||'?')+' links). New submissions are now blocked.';
+  }
+}
+
+function lockInviteGeneration(locked){
+  const btn=document.getElementById('generateInviteBtn');
+  const deactBtn=document.getElementById('deactivateAllBtn');
+  if(locked){
+    btn.disabled=true;btn.title='Survey is closed — re-open to generate new invites';
+    deactBtn.textContent='🔒 Survey Closed';deactBtn.disabled=true;
+  }else{
+    btn.disabled=false;btn.title='';
+    deactBtn.textContent='🔒 Deactivate All Active Links';deactBtn.disabled=false;
+  }
+}
+
+async function deactivateAllActiveInvites(){
+  const activeInvites=_lastInvites.filter(inv=>inviteStatus(inv).cls==='active');
+  if(!activeInvites.length){toast('No active invites to deactivate','info');return;}
+  const confirmed=confirm(
+    `⚠️ CLOSE SURVEY — DEACTIVATE ALL ACTIVE LINKS\n\n`+
+    `This will revoke ${activeInvites.length} active invite link${activeInvites.length!==1?'s':''} immediately.\n\n`+
+    `• Enumerators will no longer be able to register or submit via their invite links.\n`+
+    `• Already-submitted data is NOT affected.\n`+
+    `• You can re-open the survey or re-activate individual links if needed.\n\n`+
+    `Proceed to close the survey practice?`
+  );
+  if(!confirmed) return;
+
+  const btn=document.getElementById('deactivateAllBtn');
+  btn.disabled=true;btn.textContent='Revoking…';
+
+  let ok=0;
+  const batch=db.batch();
+  const now=firebase.firestore.FieldValue.serverTimestamp();
+  activeInvites.forEach(inv=>{
+    const ref=db.collection('invites').doc(inv.token);
+    batch.update(ref,{used:true,usedAt:now,_revokedByAdmin:currentAdmin?currentAdmin.email:'unknown',_revokedReason:'survey_closed'});
+    ok++;
+  });
+
+  try{
+    await batch.commit();
+    await db.collection('_meta').doc('surveyClosed').set({
+      closed:true,closedAt:firebase.firestore.FieldValue.serverTimestamp(),
+      closedBy:currentAdmin?currentAdmin.email:'admin',revokedCount:ok
+    });
+    toast(`🔒 Survey closed — ${ok} invite${ok!==1?'s':''} deactivated`,'success');
+    showSurveyClosedBanner({closed:true,closedBy:currentAdmin?.email||'admin',revokedCount:ok,closedAt:new Date()});
+    lockInviteGeneration(true);
+    loadInvites();
+  }catch(e){
+    toast('Error: '+e.message,'error');
+    btn.disabled=false;btn.textContent='🔒 Deactivate All Active Links';
+  }
+}
+
+async function reopenSurvey(){
+  if(!confirm('Re-open the survey? This removes the closed banner and allows new invite links to be generated.\n\nNote: previously revoked links stay revoked — you will need to re-activate them individually or generate fresh ones.')) return;
+  try{
+    await db.collection('_meta').doc('surveyClosed').set({closed:false,reopenedAt:firebase.firestore.FieldValue.serverTimestamp(),reopenedBy:currentAdmin?currentAdmin.email:'admin'});
+    document.getElementById('surveyClosedBanner').classList.remove('show');
+    lockInviteGeneration(false);
+    toast('✓ Survey re-opened','success');
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+/* ════════════════════════════════════════════
+   INVITE SECTION TOGGLE  ← NEW
+════════════════════════════════════════════ */
+let inviteSectionVisible=true;
+function toggleInviteSection(){
+  inviteSectionVisible=!inviteSectionVisible;
+  const track=document.getElementById('inviteTrack');
+  const wrap=document.getElementById('inviteSectionWrap');
+  const headEl=document.getElementById('inviteSection');
+  track.classList.toggle('on',inviteSectionVisible);
+  if(inviteSectionVisible){
+    wrap.style.display='block';
+    headEl.style.display='flex';
+    wrap.scrollIntoView({behavior:'smooth',block:'start'});
+  }else{
+    wrap.style.display='none';
+    headEl.style.display='none';
+  }
+}
+
+/* ════════════════════════════════════════════
+   ENUMERATOR REPORT TOGGLE
+════════════════════════════════════════════ */
+let reportVisible=false;
+function toggleEnumReport(){
+  reportVisible=!reportVisible;
+  document.getElementById('reportTrack').classList.toggle('on',reportVisible);
+  document.getElementById('reportLabel').textContent=reportVisible?'📋 Hide Report':'📋 Enumerator Report';
+  const sec=document.getElementById('enumReportSection');
+  const secHead=document.getElementById('rptSecHead');
+  if(reportVisible){
+    sec.classList.add('show');
+    secHead.style.display='flex';
+    renderReport();
+    sec.scrollIntoView({behavior:'smooth',block:'start'});
+  }else{
+    sec.classList.remove('show');
+    secHead.style.display='none';
+  }
+}
+
+function buildReportData(){
+  if(!allData.length) return[];
+  const byRes=groupBy(allData,d=>resName(d));
+  const today=new Date().toDateString();
+  const shortGapIds=buildShortGapIds();
+  const rapidIds=buildRapidIds();
+  return Object.entries(byRes).filter(([name])=>name&&name!=='—').map(([name,rows])=>{
+    const gpsRows=rows.filter(d=>gpsLat(d)!==null);
+    const accs=rows.map(d=>gpsAcc(d)).filter(a=>a!==null);
+    const avgAcc=accs.length?Math.round(accs.reduce((a,b)=>a+b,0)/accs.length):null;
+    const todayCnt=rows.filter(d=>{const ts=serverTs(d);return ts&&ts.toDateString()===today;}).length;
+    const lastTs=rows.map(d=>serverTs(d)).filter(Boolean).sort((a,b)=>b-a)[0]||null;
+    const conflictCnt=rows.filter(d=>hasConflict(d)).length;
+    const skipCnt=rows.filter(d=>gpsSkip(d)).length;
+    const rapidCnt=rows.filter(d=>rapidIds.has(d._id)).length;
+    const shortGapCnt=rows.filter(d=>shortGapIds.has(d._id)&&!rapidIds.has(d._id)).length;
+    const wardVCnt=rows.filter(d=>isWardViolation(d)).length;
+    const totalErrors=conflictCnt+skipCnt+rapidCnt+shortGapCnt+wardVCnt;
+    const wardsVisited=[...new Set(rows.map(d=>d.ward).filter(Boolean))];
+    const constVisited=[...new Set(rows.map(d=>d.constituency).filter(Boolean))];
+    const assigned=getResearcherAssignedWards(rows[0]);
+    const gpsPct=pct(gpsRows.length,rows.length);
+    return{name,id:resId(rows[0]),count:rows.length,todayCnt,gpsPct,avgAcc,totalErrors,conflictCnt,skipCnt,rapidCnt,shortGapCnt,wardVCnt,wardsVisited,constVisited,lastTs,assigned};
+  });
+}
+
+function renderReport(){
+  if(!allData.length){
+    document.getElementById('rptTableBody').innerHTML='<tr><td colspan="12" style="text-align:center;padding:28px;color:var(--muted2);">No data loaded — click ↻ Refresh first.</td></tr>';
+    return;
+  }
+  let data=buildReportData();
+  const search=(document.getElementById('rptSearch')?.value||'').toLowerCase();
+  const errFilter=document.getElementById('rptFilterErrors')?.value||'';
+  const sortBy=document.getElementById('rptSortBy')?.value||'rank';
+  if(search) data=data.filter(r=>r.name.toLowerCase().includes(search)||r.id.toLowerCase().includes(search));
+  if(errFilter==='clean') data=data.filter(r=>r.totalErrors===0);
+  else if(errFilter==='some') data=data.filter(r=>r.totalErrors>=1&&r.totalErrors<=3);
+  else if(errFilter==='many') data=data.filter(r=>r.totalErrors>=4);
+  if(sortBy==='rank') data.sort((a,b)=>b.count-a.count);
+  else if(sortBy==='errors') data.sort((a,b)=>b.totalErrors-a.totalErrors);
+  else if(sortBy==='name') data.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sortBy==='gps') data.sort((a,b)=>a.gpsPct-b.gpsPct);
+
+  const allForSummary=buildReportData();
+  document.getElementById('rptSumEnum').textContent=allForSummary.length;
+  document.getElementById('rptSumTotal').textContent=allForSummary.reduce((s,r)=>s+r.count,0);
+  document.getElementById('rptSumErrors').textContent=allForSummary.reduce((s,r)=>s+r.totalErrors,0);
+  document.getElementById('rptSumClean').textContent=allForSummary.filter(r=>r.totalErrors===0).length;
+
+  const maxCnt=Math.max(...data.map(r=>r.count),1);
+  const tbody=document.getElementById('rptTableBody');
+  if(!data.length){tbody.innerHTML='<tr><td colspan="12" style="padding:24px;text-align:center;color:var(--muted2);">No enumerators match the filters.</td></tr>';return;}
+
+  tbody.innerHTML=data.map((r,i)=>{
+    const rankCls=i===0?'rnk-gold':i===1?'rnk-silver':i===2?'rnk-bronze':'rnk-normal';
+    const errCls=r.totalErrors===0?'rpt-err-none':r.totalErrors<=3?'rpt-err-some':'rpt-err-many';
+    const errIcon=r.totalErrors===0?'✅':r.totalErrors<=3?'⚠️':'🔴';
+    const gpsCls=r.gpsPct>=90?'p-green':r.gpsPct>=70?'p-amber':'p-red';
+    const accCell=r.avgAcc!==null?accBadge(r.avgAcc):'<span style="color:var(--muted2)">—</span>';
+    const barW=Math.round(r.count/maxCnt*100);
+    const errParts=[];
+    if(r.conflictCnt) errParts.push(`<span style="color:var(--red);font-size:10px;">Conflict:${r.conflictCnt}</span>`);
+    if(r.skipCnt) errParts.push(`<span style="color:var(--purple);font-size:10px;">Skip:${r.skipCnt}</span>`);
+    if(r.rapidCnt) errParts.push(`<span style="color:var(--red);font-size:10px;">Rapid:${r.rapidCnt}</span>`);
+    if(r.shortGapCnt) errParts.push(`<span style="color:var(--orange);font-size:10px;">FastInt:${r.shortGapCnt}</span>`);
+    if(r.wardVCnt) errParts.push(`<span style="color:var(--amber);font-size:10px;">WardV:${r.wardVCnt}</span>`);
+    const allPlaces=[...new Set([...r.wardsVisited,...r.constVisited])].slice(0,8);
+    const placePills=allPlaces.map(p=>`<span class="rpt-place-pill">${esc(p)}</span>`).join('')+(r.wardsVisited.length+r.constVisited.length>8?`<span class="rpt-place-pill" style="background:var(--bg3);color:var(--muted)">+${r.wardsVisited.length+r.constVisited.length-8}</span>`:'');
+    const assignedStr=r.assigned&&r.assigned.length?r.assigned.slice(0,2).join(', ')+(r.assigned.length>2?'…':''):'Unrestricted';
+    const lastActiveStr=r.lastTs?fmtAgo(r.lastTs):'Never';
+    return`<tr>
+      <td><span class="rpt-rank-badge ${rankCls}">${i+1}</span></td>
+      <td class="main">${esc(r.name)}</td>
+      <td class="mono" style="color:var(--muted2);font-size:10px;">${esc(r.id)}</td>
+      <td style="font-size:10px;color:var(--muted);">${esc(assignedStr)}</td>
+      <td><div style="display:flex;align-items:center;gap:8px;"><span class="mono" style="font-size:13px;font-weight:600;color:var(--text);">${r.count}</span><div class="rpt-bar-track"><div class="rpt-bar-fill" style="width:${barW}%"></div></div></div></td>
+      <td class="mono">${r.todayCnt}</td>
+      <td><span class="pill ${gpsCls}">${r.gpsPct}%</span></td>
+      <td>${accCell}</td>
+      <td><span class="rpt-err-badge ${errCls}">${errIcon} ${r.totalErrors}</span></td>
+      <td style="max-width:180px;white-space:normal;line-height:1.8;">${errParts.length?errParts.join(' · '):'<span style="color:var(--green);font-size:10px;">Clean</span>'}</td>
+      <td class="rpt-places-cell">${placePills||'<span style="color:var(--muted2);font-size:10px;">—</span>'}</td>
+      <td class="mono" style="font-size:10px;">${lastActiveStr}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('rptNote').textContent=`Generated: ${new Date().toLocaleString()} · ${data.length} enumerators shown · ECS-2026`;
+}
+
+function exportReportCSV(){
+  const data=buildReportData();
+  if(!data.length){toast('No data to export','error');return;}
+  const headers=['Rank','Name','Researcher ID','Assigned Wards','Total Submissions','Today','GPS%','Avg Accuracy (m)','Total Errors','Conflicts','GPS Skips','Rapid','Short Gap','Ward Violations','Wards Visited','Constituencies Visited','Last Active'];
+  data.sort((a,b)=>b.count-a.count);
+  const rows=data.map((r,i)=>[i+1,r.name,r.id,r.assigned?r.assigned.join('; '):'Unrestricted',r.count,r.todayCnt,r.gpsPct+'%',r.avgAcc??'',r.totalErrors,r.conflictCnt,r.skipCnt,r.rapidCnt,r.shortGapCnt,r.wardVCnt,r.wardsVisited.join('; '),r.constVisited.join('; '),r.lastTs?r.lastTs.toLocaleString():'Never']);
+  const csv=[headers.join(','),...rows.map(r=>r.map(v=>{const s=String(v??'').replace(/"/g,'""');return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s+'"':s;}).join(','))].join('\n');
+  dl(csv,'enum_report_ECS2026_'+stamp()+'.csv','text/csv');
+  toast('✓ Report CSV exported','success');
+}
 
 async function generateInvite(){
   const name=document.getElementById('inv-name').value.trim();
@@ -737,11 +1153,14 @@ async function loadInvites(){
     const invites=snap.docs.map(d=>({id:d.id,...d.data()}));
     allInviteMap={};
     invites.forEach(inv=>{allInviteMap[inv.token]=inv;if(inv.used&&inv.usedBy) allInviteMap['uid:'+inv.usedBy]=inv;if(inv.used&&inv.usedByEmail) allInviteMap['email:'+inv.usedByEmail.toLowerCase()]=inv;});
-    buildResWardMap(invites);renderInviteTable(invites);
+    buildResWardMap(invites);_lastInvites=invites;
+    const validTokens=new Set(invites.map(i=>i.token));
+    selectedInviteTokens.forEach(t=>{if(!validTokens.has(t)) selectedInviteTokens.delete(t);});
+    renderInviteTable(invites);
     const active=invites.filter(i=>!i.used&&(!i.expiresAt||i.expiresAt.toDate()>new Date())).length;
     document.getElementById('invite-count-badge').textContent=invites.length+' total · '+active+' active';
     document.getElementById('invite-count-badge').className='card-badge '+(active>0?'cb-purple':'cb-green');
-  }catch(e){document.getElementById('inviteTableBody').innerHTML='<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--red)">Error: '+esc(e.message)+'</td></tr>';}
+  }catch(e){document.getElementById('inviteTableBody').innerHTML='<tr><td colspan="11" style="text-align:center;padding:20px;color:var(--red)">Error: '+esc(e.message)+'</td></tr>';}
 }
 
 function buildResWardMap(invites){
@@ -755,20 +1174,9 @@ function buildResWardMap(invites){
   if(allData.length) buildWardViolations();
 }
 
-/* ══════════════════════════════════════════════
-   WARD VIOLATION LOGIC v2.0
-   Checks WHERE THE ENUMERATOR PHYSICALLY WAS
-   (GPS-detected ward) vs their assigned ward.
-   Does NOT use the respondent's self-reported
-   ward (d.ward) — that would cause false flags
-   when respondents from Ward A are interviewed
-   by an enumerator correctly working in Ward B.
-══════════════════════════════════════════════ */
 function getResearcherAssignedWards(d){
-  /* Priority 1: wards saved directly in submission by survey geofence patch */
   if(d._gpsAssignedWards&&d._gpsAssignedWards.length) return d._gpsAssignedWards;
   if(d._gpsAssignedWard) return[d._gpsAssignedWard];
-  /* Fallback: invite token lookup (for submissions before geofence patch) */
   const email=(d._researcherEmail||'').toLowerCase();
   const uid=d._researcherGoogleUid||'';
   const name=(d._researcher||'').toLowerCase();
@@ -778,13 +1186,9 @@ function getResearcherAssignedWards(d){
 function isWardViolation(d){
   const assigned=getResearcherAssignedWards(d);
   if(!assigned||!assigned.length) return false;
-  /* PREFERRED: GPS-detected ward (where enumerator physically stood) */
   if(d._gpsDetectedWard) return!assigned.includes(d._gpsDetectedWard);
-  /* SECONDARY: geofence patch ward warning flag */
   if(typeof d._gpsWardWarning==='boolean') return d._gpsWardWarning;
-  /* TERTIARY: explicit inWard flag */
   if(d._gpsInWard===false) return true;
-  /* No GPS ward data — do NOT flag (avoids false positives from respondent ward) */
   return false;
 }
 
@@ -795,13 +1199,33 @@ async function saveWardEdit(token){
   catch(e){toast('Error: '+e.message,'error');}
 }
 
-function inviteStatus(inv){if(inv.used) return{cls:'used',label:'Used'};if(inv.expiresAt&&inv.expiresAt.toDate()<new Date()) return{cls:'expired',label:'Expired'};return{cls:'active',label:'Active'};}
+function inviteStatus(inv){
+  if(inv._revokedByAdmin&&inv.used) return{cls:'used',label:'Revoked'};
+  if(inv.used) return{cls:'used',label:'Used'};
+  if(inv.expiresAt&&inv.expiresAt.toDate()<new Date()) return{cls:'expired',label:'Expired'};
+  return{cls:'active',label:'Active'};
+}
 function buildInviteLink(inv){const base=(inv.baseUrl||SURVEY_BASE_URL_DEFAULT).replace(/\?.*$/,'');return base+'?invite='+inv.token;}
+
+/* ── Reactivate a revoked/used invite ── */
+async function reactivateInvite(token){
+  if(!confirm('Re-activate this invite link?\n\nThis will allow it to be claimed again by an enumerator. Only use this if the previous use was a mistake or a test.')) return;
+  try{
+    await db.collection('invites').doc(token).update({
+      used:false,usedAt:null,usedBy:null,usedByEmail:null,usedByName:null,
+      _revokedByAdmin:firebase.firestore.FieldValue.delete(),
+      _revokedReason:firebase.firestore.FieldValue.delete()
+    });
+    toast('✓ Invite re-activated','success');
+    loadInvites();
+  }catch(e){toast('Error: '+e.message,'error');}
+}
 
 function renderInviteTable(invites){
   const tbody=document.getElementById('inviteTableBody');
-  if(!invites.length){tbody.innerHTML='<tr><td colspan="10" style="padding:28px;text-align:center;color:var(--muted2);">No invites yet.</td></tr>';return;}
-  tbody.innerHTML=invites.map(inv=>{
+  const visible=hideInactiveInvites?invites.filter(inv=>inviteStatus(inv).cls==='active'):invites;
+  if(!visible.length){tbody.innerHTML='<tr><td colspan="11" style="padding:28px;text-align:center;color:var(--muted2);">'+(hideInactiveInvites?'No active invites. Toggle "Show all" to see used/expired/revoked ones.':'No invites yet.')+'</td></tr>';updateInvSelCount();return;}
+  tbody.innerHTML=visible.map(inv=>{
     const st=inviteStatus(inv),link=buildInviteLink(inv);
     const created=inv.createdAt?.toDate?inv.createdAt.toDate().toLocaleString():'—';
     const expires=inv.expiresAt?.toDate?inv.expiresAt.toDate().toLocaleString():'Never';
@@ -810,12 +1234,59 @@ function renderInviteTable(invites){
     const shortLink=link.length>40?link.slice(0,40)+'…':link;
     const sendBtns=st.cls==='active'?`<div class="send-channels"><button class="send-channel-btn sch-whatsapp" onclick="openSendModal('${inv.token}','${esc(inv.createdByName||'')}','${esc(link)}','whatsapp')">📱</button><button class="send-channel-btn sch-sms" onclick="openSendModal('${inv.token}','${esc(inv.createdByName||'')}','${esc(link)}','sms')">💬</button><button class="send-channel-btn sch-email" onclick="openSendModal('${inv.token}','${esc(inv.createdByName||'')}','${esc(link)}','email')">📧</button><button class="send-channel-btn sch-copy" onclick="openSendModal('${inv.token}','${esc(inv.createdByName||'')}','${esc(link)}','copy')">🔗</button></div>`:'<span style="color:var(--muted2);font-size:11px">—</span>';
     const wardEditSection=`<button class="ward-edit-btn" onclick="toggleWardEdit('${inv.token}')">✏ Edit</button><div class="ward-edit-form" id="wedit-${inv.token}"><div class="ward-edit-checks">${ALL_WARDS.map(w=>`<label><input type="checkbox" value="${w}" ${(inv.assignedWards||[]).includes(w)?'checked':''}> ${esc(w)}</label>`).join('')}</div><div class="ward-edit-actions"><button class="ward-save-btn" onclick="saveWardEdit('${inv.token}')">Save</button><button class="ward-cancel-btn" onclick="toggleWardEdit('${inv.token}')">Cancel</button></div></div>`;
-    const revokeBtn=st.cls==='active'?`<button class="revoke-btn" onclick="revokeInvite('${inv.token}')">Revoke</button>`:'';
-    return`<tr><td class="mono" title="${esc(inv.token)}">${inv.token.slice(0,8)}…</td><td class="main">${esc(inv.createdByName||'—')}</td><td>${wardPills}${wardEditSection}</td><td class="mono" style="font-size:10px">${created}</td><td class="mono" style="font-size:10px;color:${st.cls==='expired'?'var(--red)':'var(--muted)'}">${expires}</td><td><span class="inv-status ${st.cls}">${st.label}</span></td><td>${usedBy}</td><td><div class="copy-link-wrap" title="${esc(link)}"><span class="copy-link-text">${shortLink}</span><button class="copy-btn" onclick="quickCopyLink('${esc(link)}')">Copy</button></div></td><td>${sendBtns}</td><td>${revokeBtn}</td></tr>`;
+    /* Action column: Revoke for active, Re-activate for used/revoked, nothing for expired */
+    let actionCell='';
+    if(st.cls==='active'){
+      actionCell=`<button class="revoke-btn" onclick="revokeInvite('${inv.token}')">Revoke</button>`;
+    }else if(st.cls==='used'){
+      actionCell=`<button class="reactivate-btn" onclick="reactivateInvite('${inv.token}')" title="Re-activate this link so it can be claimed again">↺ Re-activate</button>`;
+    }
+    const checked=selectedInviteTokens.has(inv.token)?'checked':'';
+    const isActive=st.cls==='active';
+    const checkCell=isActive?`<input type="checkbox" class="inv-check" disabled title="Active invites can't be deleted — revoke first">`:`<input type="checkbox" class="inv-check" ${checked} onchange="toggleInviteSelect('${inv.token}',this)">`;
+    return`<tr data-token="${esc(inv.token)}"><td>${checkCell}</td><td class="mono" title="${esc(inv.token)}">${inv.token.slice(0,8)}…</td><td class="main">${esc(inv.createdByName||'—')}</td><td>${wardPills}${wardEditSection}</td><td class="mono" style="font-size:10px">${created}</td><td class="mono" style="font-size:10px;color:${st.cls==='expired'?'var(--red)':'var(--muted)'}">${expires}</td><td><span class="inv-status ${st.cls}">${st.label}</span></td><td>${usedBy}</td><td><div class="copy-link-wrap" title="${esc(link)}"><span class="copy-link-text">${shortLink}</span><button class="copy-btn" onclick="quickCopyLink('${esc(link)}')">Copy</button></div></td><td>${sendBtns}</td><td>${actionCell}</td></tr>`;
   }).join('');
+  updateInvSelCount();
 }
 
-async function revokeInvite(token){if(!confirm('Revoke this invite link? It will no longer be usable.')) return;try{await db.collection('invites').doc(token).update({used:true,usedAt:firebase.firestore.FieldValue.serverTimestamp(),_revokedByAdmin:currentAdmin?currentAdmin.email:'unknown'});toast('Invite revoked','success');loadInvites();}catch(e){toast('Error: '+e.message,'error');}}
+function toggleHideInactive(){
+  hideInactiveInvites=!hideInactiveInvites;
+  document.getElementById('hideInactiveTrack').classList.toggle('on',hideInactiveInvites);
+  document.getElementById('hideInactiveLabel').textContent=hideInactiveInvites?'🙈 Active only':'👁 Show all';
+  renderInviteTable(_lastInvites);
+}
+
+function toggleInviteSelect(token,el){if(el.checked) selectedInviteTokens.add(token);else selectedInviteTokens.delete(token);updateInvSelCount();}
+
+function toggleSelectAllInvites(el){
+  const boxes=[...document.querySelectorAll('#inviteTableBody .inv-check:not(:disabled)')];
+  boxes.forEach(cb=>{cb.checked=el.checked;const tr=cb.closest('tr');const token=tr?.dataset.token;if(token){if(el.checked) selectedInviteTokens.add(token);else selectedInviteTokens.delete(token);}});
+  updateInvSelCount();
+}
+
+function updateInvSelCount(){
+  const n=selectedInviteTokens.size;
+  document.getElementById('invSelCount').textContent=n+' selected';
+  document.getElementById('bulkDeleteBtn').disabled=n===0;
+  const selectAll=document.getElementById('invSelectAll');
+  if(selectAll){const boxes=[...document.querySelectorAll('#inviteTableBody .inv-check:not(:disabled)')];selectAll.checked=boxes.length>0&&boxes.every(cb=>cb.checked);}
+}
+
+async function bulkDeleteInvites(){
+  const tokens=[...selectedInviteTokens];
+  if(!tokens.length) return;
+  if(!confirm(`Permanently delete ${tokens.length} invite${tokens.length!==1?'s':''} from Firestore?\n\nThis cannot be undone.`)) return;
+  let okCount=0,failCount=0;
+  for(const token of tokens){
+    try{await db.collection('invites').doc(token).delete();okCount++;}
+    catch(e){failCount++;}
+  }
+  selectedInviteTokens.clear();
+  toast(failCount?`Deleted ${okCount}, failed ${failCount}`:`🗑 Permanently deleted ${okCount} invite${okCount!==1?'s':''}`,failCount?'error':'success');
+  loadInvites();
+}
+
+async function revokeInvite(token){if(!confirm('Revoke this invite link? It will no longer be usable.\n\nYou can re-activate it later from the Action column.')) return;try{await db.collection('invites').doc(token).update({used:true,usedAt:firebase.firestore.FieldValue.serverTimestamp(),_revokedByAdmin:currentAdmin?currentAdmin.email:'unknown',_revokedReason:'manual_revoke'});toast('Invite revoked','success');loadInvites();}catch(e){toast('Error: '+e.message,'error');}}
 function quickCopyLink(link){navigator.clipboard.writeText(link).then(()=>toast('🔗 Link copied!','info')).catch(()=>{prompt('Copy this link:',link);});}
 
 let _activeTab='whatsapp';
@@ -833,6 +1304,7 @@ let allData=[],filtered=[];
 let sortCol=1,sortDir='desc';
 let locationCache={},locationCacheData={};
 const DAILY_LIMIT=15;
+const SHORT_GAP_MS=20*60000;
 
 const resName=d=>d._researcher||d._researcherLogin||'—';
 const resId=d=>d._researcherLogin||'—';
@@ -861,11 +1333,11 @@ async function loadData(){
     setStatus('Live · '+allData.length+' submissions');
     document.getElementById('st-updated').textContent=new Date().toLocaleTimeString();
     toast('✓ Loaded '+allData.length+' submissions','success');
+    if(reportVisible) renderReport();
   }catch(e){setStatus('Error: '+e.message);toast('Error: '+e.message,'error');}
   showLoader(false);document.getElementById('refreshBtn').disabled=false;
 }
 
-/* ══ WARD VIOLATIONS ══ */
 function buildWardViolations(){
   const violations=allData.filter(d=>isWardViolation(d));
   document.getElementById('st-ward-v').textContent=violations.length;
@@ -875,31 +1347,18 @@ function buildWardViolations(){
   document.getElementById('wardViolationList').innerHTML=violations.slice(0,30).map(d=>{
     const ts=serverTs(d),assigned=getResearcherAssignedWards(d);
     let contextLine='';
-    if(d._gpsDetectedWard){
-      contextLine='GPS placed enumerator in <strong>'+esc(d._gpsDetectedWard)+'</strong>';
-      if(d._gpsDistToAssigned) contextLine+=' · ~'+(d._gpsDistToAssigned<1000?Math.round(d._gpsDistToAssigned)+'m':(d._gpsDistToAssigned/1000).toFixed(1)+'km')+' from assigned ward';
-    }else if(d._gpsWardWarning){
-      contextLine='Enumerator was outside assigned ward at submission time';
-    }else{
-      contextLine='Legacy flag · Respondent ward: <strong>'+esc(d.ward||'—')+'</strong>';
-    }
+    if(d._gpsDetectedWard){contextLine='GPS placed enumerator in <strong>'+esc(d._gpsDetectedWard)+'</strong>';if(d._gpsDistToAssigned) contextLine+=' · ~'+(d._gpsDistToAssigned<1000?Math.round(d._gpsDistToAssigned)+'m':(d._gpsDistToAssigned/1000).toFixed(1)+'km')+' from assigned ward';}
+    else if(d._gpsWardWarning){contextLine='Enumerator was outside assigned ward at submission time';}
+    else{contextLine='Legacy flag · Respondent ward: <strong>'+esc(d.ward||'—')+'</strong>';}
     const assignedPills=assigned?assigned.map(w=>'<span class="ward-pill">'+esc(w)+'</span>').join(' '):'—';
     return`<div class="ward-v-row" onclick="openModal(allData.find(x=>x._id==='${d._id}'))" style="cursor:pointer">
       <div style="width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:4px;"></div>
-      <div class="ward-v-body">
-        <div class="ward-v-title">⚠ ${esc(resName(d))} — outside assigned GPS zone</div>
-        <div class="ward-v-detail">${contextLine}</div>
-        <div class="ward-v-detail" style="margin-top:3px;">Assigned: ${assignedPills} · Respondent's ward: ${esc(d.ward||'—')} · Constituency: ${esc(d.constituency||'—')}</div>
-      </div>
-      <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);flex-shrink:0;text-align:right;">
-        ${ts?ts.toLocaleString():'—'}<br>
-        <span style="font-size:9px;">${d._gpsDetectedWard?'📡 GPS-based':'⚠️ Flag-based'}</span>
-      </div>
+      <div class="ward-v-body"><div class="ward-v-title">⚠ ${esc(resName(d))} — outside assigned GPS zone</div><div class="ward-v-detail">${contextLine}</div><div class="ward-v-detail" style="margin-top:3px;">Assigned: ${assignedPills} · Respondent's ward: ${esc(d.ward||'—')} · Constituency: ${esc(d.constituency||'—')}</div></div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);flex-shrink:0;text-align:right;">${ts?ts.toLocaleString():'—'}<br><span style="font-size:9px;">${d._gpsDetectedWard?'📡 GPS-based':'⚠️ Flag-based'}</span></div>
     </div>`;
   }).join('');
 }
 
-/* ══ KPIs ══ */
 function buildKPIs(){
   const n=allData.length;
   const today=new Date().toDateString();
@@ -915,6 +1374,7 @@ function buildKPIs(){
   let rapidCount=0;
   const byRes=groupBy(allData,d=>resName(d));
   Object.entries(byRes).forEach(([name,rows])=>{if(name==='—') return;const sorted=rows.map(d=>({...d,_t:d._submittedAt?new Date(d._submittedAt).getTime():0})).filter(d=>d._t>0).sort((a,b)=>a._t-b._t);for(let i=1;i<sorted.length;i++){if(sorted[i]._t-sorted[i-1]._t<60000) rapidCount++;}});
+  const shortGapIds=buildShortGapIds();
   document.getElementById('st-total').textContent=n;
   document.getElementById('st-today').textContent=todayData.length;
   document.getElementById('st-today-res').textContent=todayRes.size+' researchers';
@@ -926,16 +1386,16 @@ function buildKPIs(){
   document.getElementById('st-conflicts').textContent=conflicts;
   document.getElementById('st-skipped').textContent=skipped;
   document.getElementById('st-rapid').textContent=rapidCount;
+  document.getElementById('st-shortgap').textContent=shortGapIds.size;
 }
 
-/* ══ FRAUD PANEL ══ */
 function buildFraudPanel(){
   const issues=[],byRes=groupBy(allData,d=>resName(d)),today=new Date().toDateString();
   allData.filter(d=>hasConflict(d)).forEach(d=>{const ts=serverTs(d);issues.push({sev:'high',title:'Spatial conflict — '+resName(d),detail:'Submission #'+d._idx+' overlaps another researcher\'s location within 200 m · '+(d.ward||'unknown ward')+' · ±'+(gpsAcc(d)||'?')+'m',meta:ts?ts.toLocaleString():'—',id:d._id});});
   allData.filter(d=>gpsSkip(d)).forEach(d=>{const ts=serverTs(d),reason=skipReason(d),sup=supervisorOverride(d);issues.push({sev:sup?'med':'high',title:'GPS override — '+resName(d),detail:reason?'Reason: "'+reason+'" · '+(sup?'Supervisor PIN used':'No PIN recorded')+' · '+(d.ward||'—'):'No reason recorded · '+(sup?'Supervisor PIN used':'No PIN — possible unauthorised skip')+' · '+(d.ward||'—'),meta:ts?ts.toLocaleString():'—',id:d._id});});
-  Object.entries(byRes).forEach(([name,rows])=>{if(name==='—') return;const sorted=rows.map(d=>({...d,_t:d._submittedAt?new Date(d._submittedAt).getTime():0})).filter(d=>d._t>0).sort((a,b)=>a._t-b._t);for(let i=1;i<sorted.length;i++){const gap=sorted[i]._t-sorted[i-1]._t;if(gap<60000) issues.push({sev:'high',title:'Rapid submission — '+name,detail:'Submissions #'+sorted[i-1]._idx+' and #'+sorted[i]._idx+' are only '+Math.round(gap/1000)+'s apart · possible duplicate',meta:new Date(sorted[i]._t).toLocaleString(),id:sorted[i]._id});}});
+  Object.entries(byRes).forEach(([name,rows])=>{if(name==='—') return;const sorted=rows.map(d=>({...d,_t:d._submittedAt?new Date(d._submittedAt).getTime():0})).filter(d=>d._t>0).sort((a,b)=>a._t-b._t);for(let i=1;i<sorted.length;i++){const gap=sorted[i]._t-sorted[i-1]._t;if(gap<60000) issues.push({sev:'high',title:'Rapid submission — '+name,detail:'Submissions #'+sorted[i-1]._idx+' and #'+sorted[i]._idx+' are only '+Math.round(gap/1000)+'s apart · possible duplicate',meta:new Date(sorted[i]._t).toLocaleString(),id:sorted[i]._id});else if(gap<SHORT_GAP_MS) issues.push({sev:'med',title:'Too fast for a real interview — '+name,detail:'Submissions #'+sorted[i-1]._idx+' and #'+sorted[i]._idx+' are only '+Math.round(gap/60000)+'min apart',meta:new Date(sorted[i]._t).toLocaleString(),id:sorted[i]._id});}});
   Object.entries(byRes).forEach(([name,rows])=>{if(name==='—') return;const cnt=rows.filter(d=>{const ts=serverTs(d);return ts&&ts.toDateString()===today;}).length;if(cnt>DAILY_LIMIT) issues.push({sev:'med',title:'Daily limit exceeded — '+name,detail:cnt+' submissions today (limit: '+DAILY_LIMIT+'). Excess: '+(cnt-DAILY_LIMIT)+'.',meta:'Today',id:null});});
-  allData.filter(d=>{const srv=serverTs(d);if(!srv||!d._submittedAt) return false;return Math.abs(srv.getTime()-new Date(d._submittedAt).getTime())>600000;}).forEach(d=>{const ts=serverTs(d),drift=Math.round(Math.abs(ts.getTime()-new Date(d._submittedAt).getTime())/60000);issues.push({sev:'med',title:'Time drift — '+resName(d),detail:'Device vs server differ by '+drift+' min on submission #'+d._idx+' · possible backdated entry',meta:ts.toLocaleString(),id:d._id});});
+  allData.filter(d=>{const srv=serverTs(d);if(!srv||!d._submittedAt) return false;return Math.abs(srv.getTime()-new Date(d._submittedAt).getTime())>600000;}).forEach(d=>{const ts=serverTs(d),drift=Math.round(Math.abs(ts.getTime()-new Date(d._submittedAt).getTime())/60000);issues.push({sev:'med',title:'Time drift — '+resName(d),detail:'Device vs server differ by '+drift+' min on submission #'+d._idx,meta:ts.toLocaleString(),id:d._id});});
   const highCount=issues.filter(i=>i.sev==='high').length;
   document.getElementById('fraud-count-badge').textContent=issues.length+' issue'+(issues.length!==1?'s':'')+(highCount?' · '+highCount+' critical':'');
   document.getElementById('fraud-count-badge').className='card-badge '+(highCount>0?'cb-red':issues.length>0?'cb-amber':'cb-green');
@@ -943,7 +1403,6 @@ function buildFraudPanel(){
   document.getElementById('fraudList').innerHTML=issues.slice(0,30).map(iss=>`<div class="fraud-row" ${iss.id?`onclick="openModalById('${iss.id}')" style="cursor:pointer"`:''}><div class="fraud-sev ${iss.sev}"></div><div class="fraud-body"><div class="fraud-title">${esc(iss.title)}</div><div class="fraud-detail">${esc(iss.detail)}</div></div><div class="fraud-meta">${esc(iss.meta)}</div></div>`).join('');
 }
 
-/* ══ DAILY QUOTA ══ */
 function buildDailyQuota(){
   const today=new Date().toDateString(),byRes=groupBy(allData,d=>resName(d));
   const items=Object.entries(byRes).filter(([name])=>name!=='—').map(([name,rows])=>{const cnt=rows.filter(d=>{const ts=serverTs(d);return ts&&ts.toDateString()===today;}).length;return{name,cnt};}).sort((a,b)=>b.cnt-a.cnt).slice(0,10);
@@ -951,7 +1410,6 @@ function buildDailyQuota(){
   document.getElementById('quotaList').innerHTML=items.map(item=>{const p=Math.min((item.cnt/DAILY_LIMIT)*100,100);const cls=item.cnt>=DAILY_LIMIT?'over':item.cnt>=(DAILY_LIMIT*.8)?'warn':'safe';return`<div class="quota-row"><div class="quota-name">${esc(item.name)}</div><div class="quota-track"><div class="quota-fill ${cls}" style="width:${p}%"></div></div><div class="quota-val">${item.cnt}/${DAILY_LIMIT}</div></div>`;}).join('');
 }
 
-/* ══ ALERTS ══ */
 function buildAlerts(){
   const alerts=[],n=allData.length;
   const noGps=allData.filter(d=>gpsLat(d)===null);
@@ -959,24 +1417,26 @@ function buildAlerts(){
   const today=new Date().toDateString(),resMap=groupBy(allData,d=>resName(d));
   const gpsPct=pct(allData.filter(d=>gpsLat(d)!==null).length,n);
   const violations=allData.filter(d=>isWardViolation(d));
-  if(violations.length>0) alerts.push({type:'danger',icon:'🗺',title:violations.length+' ward assignment violation'+(violations.length!==1?'s':''),text:'Enumerators recorded outside their assigned GPS zone. GPS-detected ward compared to assigned ward — respondent home ward is not used for this check.'});
+  if(violations.length>0) alerts.push({type:'danger',icon:'🗺',title:violations.length+' ward assignment violation'+(violations.length!==1?'s':''),text:'Enumerators recorded outside their assigned GPS zone.'});
   if(gpsPct<80) alerts.push({type:'danger',icon:'📍',title:'GPS Coverage Low: '+gpsPct+'%',text:noGps.length+' submissions missing GPS.'});
   else alerts.push({type:'good',icon:'✅',title:'GPS Coverage: '+gpsPct+'%',text:allData.filter(d=>gpsLat(d)!==null).length+' of '+n+' submissions have verified location.'});
   if(flagged.length>0) alerts.push({type:'warn',icon:'⚠️',title:flagged.length+' submissions with GPS accuracy >50m',text:'Collected indoors or with poor signal.'});
   const conflicts=allData.filter(d=>hasConflict(d)).length;
   if(conflicts>0) alerts.push({type:'danger',icon:'🔴',title:conflicts+' spatial conflicts detected',text:'Multiple enumerators submitted from overlapping locations.'});
+  const shortGapCount=buildShortGapIds().size;
+  if(shortGapCount>0) alerts.push({type:'warn',icon:'⏱',title:shortGapCount+' submissions with too-short interview gaps',text:'Consecutive submissions less than 20 minutes apart.'});
   const skipped=allData.filter(d=>gpsSkip(d)).length;
   const noReason=allData.filter(d=>gpsSkip(d)&&!skipReason(d)).length;
   if(noReason>0) alerts.push({type:'danger',icon:'🔓',title:noReason+' GPS overrides with no reason recorded',text:'Flag for review.'});
-  else if(skipped>0) alerts.push({type:'warn',icon:'🔓',title:skipped+' GPS overrides used',text:'All have recorded reasons. Verify legitimacy.'});
+  else if(skipped>0) alerts.push({type:'warn',icon:'🔓',title:skipped+' GPS overrides used',text:'All have recorded reasons.'});
   Object.entries(resMap).forEach(([name,rows])=>{if(name==='—') return;const cnt=rows.filter(d=>{const ts=serverTs(d);return ts&&ts.toDateString()===today;}).length;if(cnt>DAILY_LIMIT) alerts.push({type:'danger',icon:'🚨',title:name+' exceeded daily limit',text:cnt+' submissions today (max '+DAILY_LIMIT+').'});});
   if(!alerts.length) alerts.push({type:'good',icon:'✅',title:'All systems normal',text:'No anomalies detected.'});
   document.getElementById('alertList').innerHTML=alerts.map(a=>`<div class="alert-item ${a.type}"><div class="alert-icon">${a.icon}</div><div class="alert-body"><div class="alert-title">${a.title}</div><div class="alert-text">${a.text}</div></div></div>`).join('');
 }
 
-/* ══ LEADERBOARD ══ */
 function buildLeaderboard(){
   const today=new Date().toDateString(),byRes=groupBy(allData,d=>resName(d)),maxCnt=Math.max(...Object.values(byRes).map(r=>r.length),1);
+  const shortGapIds=buildShortGapIds();
   const sorted=Object.entries(byRes).filter(([name])=>name!=='—').map(([name,rows])=>{
     const gpsRows=rows.filter(d=>gpsLat(d)!==null);
     const accs=rows.map(d=>gpsAcc(d)).filter(a=>a!==null);
@@ -984,9 +1444,10 @@ function buildLeaderboard(){
     const todayCnt=rows.filter(d=>{const ts=serverTs(d);return ts&&ts.toDateString()===today;}).length;
     const lastTs=rows.map(d=>serverTs(d)).filter(Boolean).sort((a,b)=>b-a)[0]||null;
     const fraudCnt=rows.filter(d=>hasConflict(d)||gpsSkip(d)).length;
+    const shortGapCnt=rows.filter(d=>shortGapIds.has(d._id)).length;
     const wardViolCnt=rows.filter(d=>isWardViolation(d)).length;
     const assigned=getResearcherAssignedWards(rows[0]);
-    return{name,count:rows.length,gpsCount:gpsRows.length,avgAcc,todayCnt,lastTs,id:resId(rows[0]),fraudCnt,wardViolCnt,assigned};
+    return{name,count:rows.length,gpsCount:gpsRows.length,avgAcc,todayCnt,lastTs,id:resId(rows[0]),fraudCnt,shortGapCnt,wardViolCnt,assigned};
   }).sort((a,b)=>b.count-a.count);
   document.getElementById('res-count-badge').textContent=sorted.length+' researchers';
   document.getElementById('res-leaderboard').innerHTML=sorted.map((r,i)=>{
@@ -996,13 +1457,13 @@ function buildLeaderboard(){
     const gpsCls=gpsPct>=90?'res-gps':'res-gps warn';
     const timeAgo=r.lastTs?fmtAgo(r.lastTs):'never';
     const fraudBadge=r.fraudCnt>0?`<span class="res-fraud-badge">⚠${r.fraudCnt}</span>`:'';
+    const shortGapBadge=r.shortGapCnt>0?`<span class="res-fraud-badge" style="background:var(--orange-l);color:var(--orange);">⏱${r.shortGapCnt}</span>`:'';
     const wardVBadge=r.wardViolCnt>0?`<span class="res-fraud-badge" style="background:var(--amber-l);color:var(--amber);">🗺${r.wardViolCnt}</span>`:'';
     const wardPills=r.assigned&&r.assigned.length?'<div class="res-ward-pills">'+r.assigned.slice(0,3).map(w=>`<span class="res-ward-pill">${esc(w)}</span>`).join('')+(r.assigned.length>3?`<span class="res-ward-pill">+${r.assigned.length-3}</span>`:'')+'</div>':'<span style="font-size:9px;color:var(--muted2)">No restriction</span>';
-    return`<div class="res-row"><div class="res-rank ${rankCls}">${i+1}</div><div class="res-avatar" style="background:${avatarColor(r.name)}">${initial}</div><div class="res-info"><div class="res-name">${esc(r.name)}${fraudBadge}${wardVBadge}</div><div class="res-id">${esc(r.id)}</div><div class="res-ward-pills">${wardPills}</div></div><div class="res-stats"><div class="res-stat"><div class="res-stat-val">${r.count}</div><div class="res-stat-lbl">total</div></div><div class="res-stat"><div class="res-stat-val">${r.todayCnt}</div><div class="res-stat-lbl">today</div></div><div><span class="${gpsCls}">📍${gpsPct}%</span><div class="res-last">${timeAgo}</div></div><div class="res-bar-wrap"><div class="res-bar-track"><div class="res-bar-fill" style="width:${pct(r.count,maxCnt)}%"></div></div></div></div></div>`;
+    return`<div class="res-row"><div class="res-rank ${rankCls}">${i+1}</div><div class="res-avatar" style="background:${avatarColor(r.name)}">${initial}</div><div class="res-info"><div class="res-name">${esc(r.name)}${fraudBadge}${shortGapBadge}${wardVBadge}</div><div class="res-id">${esc(r.id)}</div><div class="res-ward-pills">${wardPills}</div></div><div class="res-stats"><div class="res-stat"><div class="res-stat-val">${r.count}</div><div class="res-stat-lbl">total</div></div><div class="res-stat"><div class="res-stat-val">${r.todayCnt}</div><div class="res-stat-lbl">today</div></div><div><span class="${gpsCls}">📍${gpsPct}%</span><div class="res-last">${timeAgo}</div></div><div class="res-bar-wrap"><div class="res-bar-track"><div class="res-bar-fill" style="width:${pct(r.count,maxCnt)}%"></div></div></div></div></div>`;
   }).join('');
 }
 
-/* ══ ACTIVITY FEED ══ */
 function buildActivityFeed(){
   const recent=allData.slice(0,30);
   document.getElementById('activity-feed').innerHTML=recent.map(d=>{
@@ -1013,7 +1474,6 @@ function buildActivityFeed(){
   }).join('');
 }
 
-/* ══ HEATMAP ══ */
 function buildHeatmap(){
   const counts=new Array(24).fill(0);
   allData.forEach(d=>{const ts=serverTs(d);if(ts) counts[ts.getHours()]++;});
@@ -1022,7 +1482,6 @@ function buildHeatmap(){
   document.getElementById('hourly-labels').innerHTML=counts.map((_,h)=>`<div class="hm-label">${h}</div>`).join('');
 }
 
-/* ══ DAILY OUTPUT ══ */
 function buildDailyOutput(){
   const byRes=groupBy(allData,d=>resName(d)),now=Date.now(),sevenDays=7*86400000;
   const items=Object.entries(byRes).filter(([name])=>name!=='—').map(([name,rows])=>{const recent=rows.filter(d=>{const ts=serverTs(d);return ts&&(now-ts.getTime())<sevenDays;});const days=new Set(recent.map(d=>{const ts=serverTs(d);return ts?ts.toDateString():'';}).filter(Boolean)).size||1;return{name,avg:parseFloat((recent.length/days).toFixed(1)),total:rows.length};}).sort((a,b)=>b.avg-a.avg).slice(0,10);
@@ -1030,9 +1489,9 @@ function buildDailyOutput(){
   document.getElementById('daily-output').innerHTML=items.map(item=>`<div class="dur-row"><div class="dur-name">${esc(item.name)}</div><div class="dur-track"><div class="dur-fill" style="width:${(item.avg/maxAvg)*100}%"></div></div><div class="dur-val">${item.avg}/d</div></div>`).join('');
 }
 
-/* ══ GPS TABLES ══ */
 function buildGPSTables(){
   const byRes=groupBy(allData,d=>resName(d));
+  const shortGapIds=buildShortGapIds();
   const rows=Object.entries(byRes).filter(([name])=>name!=='—').map(([name,data])=>{
     const gps=data.filter(d=>gpsLat(d)!==null);
     const accs=data.map(d=>gpsAcc(d)).filter(a=>a!==null);
@@ -1040,22 +1499,21 @@ function buildGPSTables(){
     const flagged=data.filter(d=>gpsAcc(d)!==null&&gpsAcc(d)>50).length;
     const skips=data.filter(d=>gpsSkip(d)).length;
     const conflicts=data.filter(d=>hasConflict(d)).length;
+    const shortGap=data.filter(d=>shortGapIds.has(d._id)).length;
     const wardV=data.filter(d=>isWardViolation(d)).length;
-    return{name,total:data.length,gpsPct:pct(gps.length,data.length),avg,flagged,skips,conflicts,wardV};
+    return{name,total:data.length,gpsPct:pct(gps.length,data.length),avg,flagged,skips,conflicts,shortGap,wardV};
   }).sort((a,b)=>b.total-a.total);
-  document.getElementById('gps-acc-body').innerHTML=rows.map(r=>`<tr><td class="main">${esc(r.name)}</td><td class="mono">${r.total}</td><td><span class="pill ${r.gpsPct>=90?'p-green':r.gpsPct>=70?'p-amber':'p-red'}">${r.gpsPct}%</span></td><td>${r.avg!==null?accBadge(r.avg):'<span style="color:var(--muted2)">—</span>'}</td><td class="mono" style="color:${r.flagged>0?'var(--amber)':'var(--muted2)'}">${r.flagged}</td><td><span class="pill ${r.skips>0?'p-purple':'p-gray'}">${r.skips}</span></td><td><span class="pill ${r.conflicts>0?'p-red':'p-gray'}">${r.conflicts}</span></td><td><span class="pill ${r.wardV>0?'p-amber':'p-gray'}" title="GPS-based: enumerator outside assigned zone">${r.wardV}</span></td></tr>`).join('');
+  document.getElementById('gps-acc-body').innerHTML=rows.map(r=>`<tr><td class="main">${esc(r.name)}</td><td class="mono">${r.total}</td><td><span class="pill ${r.gpsPct>=90?'p-green':r.gpsPct>=70?'p-amber':'p-red'}">${r.gpsPct}%</span></td><td>${r.avg!==null?accBadge(r.avg):'<span style="color:var(--muted2)">—</span>'}</td><td class="mono" style="color:${r.flagged>0?'var(--amber)':'var(--muted2)'}">${r.flagged}</td><td><span class="pill ${r.skips>0?'p-purple':'p-gray'}">${r.skips}</span></td><td><span class="pill ${r.conflicts>0?'p-red':'p-gray'}">${r.conflicts}</span></td><td><span class="pill ${r.shortGap>0?'p-orange':'p-gray'}">${r.shortGap}</span></td><td><span class="pill ${r.wardV>0?'p-amber':'p-gray'}">${r.wardV}</span></td></tr>`).join('');
   const anomalies=allData.filter(d=>gpsLat(d)===null||(gpsAcc(d)!==null&&gpsAcc(d)>50)).slice(0,40);
   document.getElementById('anomaly-count').textContent=anomalies.length+' issues';
   document.getElementById('anomaly-body').innerHTML=anomalies.map(d=>{const ts=serverTs(d);const issue=gpsLat(d)===null?'<span class="pill p-red">No GPS</span>':`<span class="pill p-amber">±${gpsAcc(d)}m</span>`;const loc=gpsLat(d)!==null?gpsLat(d).toFixed(4)+', '+gpsLng(d).toFixed(4):'—';return`<tr><td class="mono">${d._idx}</td><td class="main">${esc(resName(d))}</td><td class="mono" style="white-space:nowrap">${ts?ts.toLocaleString():'—'}</td><td class="mono">${loc}</td><td>${issue}</td></tr>`;}).join('');
 }
 
-/* ══ RESEARCHER FILTER ══ */
 function populateResearcherFilter(){
   const sel=document.getElementById('fResearcher'),existing=[...sel.options].map(o=>o.value);
   [...new Set(allData.map(d=>resName(d)).filter(r=>r&&r!=='—'))].sort().forEach(name=>{if(!existing.includes(name)){const opt=document.createElement('option');opt.value=name;opt.textContent=name;sel.appendChild(opt);}});
 }
 
-/* ══ FILTERS ══ */
 function applyFilters(){
   const search=document.getElementById('searchInput').value.toLowerCase();
   const res=document.getElementById('fResearcher').value;
@@ -1066,17 +1524,18 @@ function applyFilters(){
   const date=document.getElementById('fDate').value;
   const now=new Date(),todayStr=now.toDateString(),yestStr=new Date(now-86400000).toDateString(),weekAgo=now.getTime()-7*86400000;
   const rapidIds=buildRapidIds();
+  const shortGapIds=buildShortGapIds();
   filtered=allData.filter(d=>{
     if(res&&resName(d)!==res) return false;
     if(con&&d.constituency!==con) return false;
     if(ward&&d.ward!==ward) return false;
     if(gps){const acc=gpsAcc(d);if(gps==='good'&&!(gpsLat(d)!==null&&acc!==null&&acc<=20)) return false;if(gps==='warn'&&!(gpsLat(d)!==null&&acc!==null&&acc>20&&acc<=50)) return false;if(gps==='poor'&&!(gpsLat(d)!==null&&acc!==null&&acc>50)) return false;if(gps==='none'&&gpsLat(d)!==null) return false;}
-    if(fraud){if(fraud==='conflict'&&!hasConflict(d)) return false;if(fraud==='skipped'&&!gpsSkip(d)) return false;if(fraud==='rapid'&&!rapidIds.has(d._id)) return false;if(fraud==='ward_violation'&&!isWardViolation(d)) return false;}
+    if(fraud){if(fraud==='conflict'&&!hasConflict(d)) return false;if(fraud==='skipped'&&!gpsSkip(d)) return false;if(fraud==='rapid'&&!rapidIds.has(d._id)) return false;if(fraud==='shortgap'&&!shortGapIds.has(d._id)) return false;if(fraud==='ward_violation'&&!isWardViolation(d)) return false;}
     if(date){const ts=serverTs(d);if(!ts) return false;if(date==='today'&&ts.toDateString()!==todayStr) return false;if(date==='yesterday'&&ts.toDateString()!==yestStr) return false;if(date==='week'&&ts.getTime()<weekAgo) return false;}
     if(search){const h=[resName(d),resId(d),d.ward,d.constituency].join(' ').toLowerCase();if(!h.includes(search)) return false;}
     return true;
   });
-  renderTable(rapidIds);
+  renderTable(rapidIds,shortGapIds);
 }
 
 function clearFilters(){['searchInput','fResearcher','fConstituency','fWard','fGps','fFraud','fDate'].forEach(id=>document.getElementById(id).value='');applyFilters();}
@@ -1087,9 +1546,15 @@ function buildRapidIds(){
   return rapidIds;
 }
 
-/* ══ TABLE RENDER ══ */
-function renderTable(rapidIds){
+function buildShortGapIds(){
+  const ids=new Set(),byRes=groupBy(allData,d=>resName(d));
+  Object.entries(byRes).forEach(([name,rows])=>{if(name==='—') return;const sorted=rows.map(d=>({...d,_t:d._submittedAt?new Date(d._submittedAt).getTime():0})).filter(d=>d._t>0).sort((a,b)=>a._t-b._t);for(let i=1;i<sorted.length;i++){const gap=sorted[i]._t-sorted[i-1]._t;if(gap<SHORT_GAP_MS){ids.add(sorted[i]._id);ids.add(sorted[i-1]._id);}}});
+  return ids;
+}
+
+function renderTable(rapidIds,shortGapIds){
   if(!rapidIds) rapidIds=buildRapidIds();
+  if(!shortGapIds) shortGapIds=buildShortGapIds();
   const tbody=document.getElementById('tableBody'),scroll=document.getElementById('tableScroll'),empty=document.getElementById('emptyState');
   if(!filtered.length){scroll.style.display='none';empty.classList.add('show');document.getElementById('rowCount').textContent='0 rows';document.getElementById('footerInfo').textContent='No results';return;}
   empty.classList.remove('show');scroll.style.display='block';
@@ -1098,32 +1563,28 @@ function renderTable(rapidIds){
   tbody.innerHTML='';
   filtered.forEach(d=>{
     const ts=serverTs(d),dTime=devTime(d)?new Date(devTime(d)).toLocaleString():'—';
-    const lat=gpsLat(d),lng=gpsLng(d),acc=gpsAcc(d),skip_=gpsSkip(d),conflict=hasConflict(d),reason=skipReason(d),isRapid=rapidIds.has(d._id);
-    const wardV=isWardViolation(d),assigned=getResearcherAssignedWards(d),isFlagged=conflict||skip_||isRapid;
+    const lat=gpsLat(d),lng=gpsLng(d),acc=gpsAcc(d),skip_=gpsSkip(d),conflict=hasConflict(d),reason=skipReason(d),isRapid=rapidIds.has(d._id),isShort=shortGapIds.has(d._id)&&!isRapid;
+    const wardV=isWardViolation(d),assigned=getResearcherAssignedWards(d),isFlagged=conflict||skip_||isRapid||isShort;
     const mapsUrl=lat!==null&&lng!==null?'https://www.google.com/maps?q='+lat+','+lng:null;
     let drift='—';
     if(devTime(d)&&ts){const ms=Math.abs(ts.getTime()-new Date(devTime(d)).getTime());drift=ms<60000?'<span class="pill p-green">&lt;1m</span>':ms<600000?`<span class="pill p-amber">${Math.round(ms/60000)}m</span>`:`<span class="pill p-red">${Math.round(ms/60000)}m</span>`;}
-    const conflictPill=conflict?'<span class="pill p-red">⚠ Conflict</span>':isRapid?'<span class="pill p-amber">⚡ Rapid</span>':'<span class="pill p-gray">OK</span>';
-    const skipPill=skip_?(reason?`<span class="pill p-amber" title="${esc(reason)}">🔓 Override</span>`:'<span class="pill p-red">🔓 No reason</span>'):'<span class="pill p-green">No</span>';
+    const conflictPill=conflict?'<span class="pill p-red">⚠ Conflict</span>':isRapid?'<span class="pill p-amber">⚡ Rapid</span>':isShort?'<span class="pill p-orange">⏱ Too Fast</span>':'<span class="pill p-gray">OK</span>';
+    const skipPill=skip_?(reason?`<span class="pill p-amber">🔓 Override</span>`:'<span class="pill p-red">🔓 No reason</span>'):'<span class="pill p-green">No</span>';
     const reasonCell=reason?`<span title="${esc(reason)}" style="font-size:10px;color:var(--amber);max-width:120px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(reason)}</span>`:'<span style="color:var(--muted2)">—</span>';
     const assignedCell=assigned&&assigned.length?assigned.slice(0,2).map(w=>`<span class="ward-pill">${esc(w)}</span>`).join(' ')+(assigned.length>2?`<span class="ward-pill">+${assigned.length-2}</span>`:''):'<span style="color:var(--muted2);font-size:10px">Any</span>';
-    /* GPS-based ward ok cell */
     let wardOkCell;
     if(!assigned){wardOkCell='<span class="pill p-gray">—</span>';}
-    else if(wardV){
-      const basis=d._gpsDetectedWard?'📡 GPS':'⚠️ Flag';
-      wardOkCell=`<span class="pill p-amber" title="Enumerator GPS outside assigned ward (${basis})">⚠ Mismatch</span>`;
-    }else{wardOkCell='<span class="pill p-green">✓ OK</span>';}
+    else if(wardV){const basis=d._gpsDetectedWard?'📡 GPS':'⚠️ Flag';wardOkCell=`<span class="pill p-amber" title="Enumerator GPS outside assigned ward (${basis})">⚠ Mismatch</span>`;}
+    else{wardOkCell='<span class="pill p-green">✓ OK</span>';}
     const tr=document.createElement('tr');
     if(isFlagged) tr.className='flagged-row';else if(wardV) tr.className='ward-violation-row';
     tr.style.cursor='pointer';tr.addEventListener('click',()=>openModal(d));
     tr.innerHTML=`<td class="mono">${d._idx}</td><td class="mono" style="white-space:nowrap;font-size:11px">${ts?ts.toLocaleString():'—'}</td><td class="mono" style="white-space:nowrap;font-size:11px">${dTime}</td><td class="main">${esc(resName(d))}</td><td class="mono" style="color:var(--muted2)">${esc(resId(d))}</td><td class="main">${esc(d.constituency||'—')}</td><td>${esc(d.ward||'—')}</td><td>${assignedCell}</td><td>${wardOkCell}</td><td class="mono">${lat!==null?lat.toFixed(5):'—'}</td><td class="mono">${lng!==null?lng.toFixed(5):'—'}</td><td>${acc!==null?accBadge(acc):'<span style="color:var(--muted2)">—</span>'}</td><td>${skipPill}</td><td style="max-width:130px;">${reasonCell}</td><td>${conflictPill}</td><td class="mono" style="font-size:10px;max-width:160px;" id="loc-${d._id}">${locationCache[d._id]?makeLocBadge(locationCacheData[d._id]):'<span class="loc-loading">…</span>'}</td><td>${drift}</td><td>${mapsUrl?`<a class="map-link" href="${mapsUrl}" target="_blank" onclick="event.stopPropagation()">↗ Maps</a>`:'—'}</td>`;
-    tbody.appendChild(tr);
+    document.getElementById('tableBody').appendChild(tr);
     if(lat!==null&&!locationCache[d._id]) queueGeocode(d._id,lat,lng);
   });
 }
 
-/* ══ SORT ══ */
 const COL_KEYS=['_idx','_ts','_devts','_resName','_resId','constituency','ward','_assigned','_wardok','_lat','_lng','_acc'];
 function sortTable(ci){
   const ths=document.querySelectorAll('thead th');ths.forEach(t=>t.classList.remove('sort-asc','sort-desc'));
@@ -1142,58 +1603,24 @@ function sortTable(ci){
   renderTable();
 }
 
-/* ══ MODAL ══ */
 function openModalById(id){const d=allData.find(x=>x._id===id);if(d) openModal(d);}
-
 function openModal(d){
   if(!d) return;
   const ts=serverTs(d),dTime=devTime(d)?new Date(devTime(d)).toLocaleString():'—';
   const lat=gpsLat(d),lng=gpsLng(d),acc=gpsAcc(d),skip_=gpsSkip(d),conflict=hasConflict(d),reason=skipReason(d),supPin=supervisorOverride(d);
   const wardV=isWardViolation(d),assigned=getResearcherAssignedWards(d);
+  const shortGapSet=buildShortGapIds(),isShort=shortGapSet.has(d._id);
   const mapsUrl=lat!==null&&lng!==null?'https://www.google.com/maps?q='+lat+','+lng:null;
   let driftMs=null;
   if(devTime(d)&&ts) driftMs=Math.abs(ts.getTime()-new Date(devTime(d)).getTime());
-
-  /* ── Build the ward violation section ──
-     KEY CHANGE: shows GPS-detected ward (where enumerator physically was)
-     NOT the respondent's self-reported ward.
-     Clearly labels respondent ward separately so there's no confusion. */
   const distStr=d._gpsDistToAssigned?(d._gpsDistToAssigned<1000?Math.round(d._gpsDistToAssigned)+'m':(d._gpsDistToAssigned/1000).toFixed(1)+'km'):null;
   const wardSection=wardV?`
     <div class="ward-section-title">🗺 Ward Assignment Violation</div>
     <div class="detail-grid">
-      <div class="detail-item ward-warn">
-        <div class="detail-key">Enumerator GPS Zone</div>
-        <div class="detail-val warn">
-          ${d._gpsDetectedWard
-            ? '📡 '+esc(d._gpsDetectedWard)+' (GPS-detected)'
-            : d._gpsWardWarning
-              ? '⚠️ Outside assigned ward (flag-based)'
-              : '⚠️ Outside zone (legacy flag)'}
-        </div>
-      </div>
-      <div class="detail-item">
-        <div class="detail-key">Assigned Ward(s)</div>
-        <div class="detail-val">${assigned?assigned.map(w=>'<span class="ward-pill">'+esc(w)+'</span>').join(' '):'—'}</div>
-      </div>
+      <div class="detail-item ward-warn"><div class="detail-key">Enumerator GPS Zone</div><div class="detail-val warn">${d._gpsDetectedWard?'📡 '+esc(d._gpsDetectedWard)+' (GPS-detected)':d._gpsWardWarning?'⚠️ Outside assigned ward (flag-based)':'⚠️ Outside zone (legacy flag)'}</div></div>
+      <div class="detail-item"><div class="detail-key">Assigned Ward(s)</div><div class="detail-val">${assigned?assigned.map(w=>'<span class="ward-pill">'+esc(w)+'</span>').join(' '):'—'}</div></div>
       ${distStr?`<div class="detail-item"><div class="detail-key">Distance to Assigned Ward</div><div class="detail-val warn">~${distStr} from assigned ward</div></div>`:''}
-      <div class="detail-item ${distStr?'':''}">
-        <div class="detail-key">Respondent's Home Ward</div>
-        <div class="detail-val" style="color:var(--muted)">
-          ${esc(d.ward||'—')}
-          <span style="font-size:10px;color:var(--muted2);display:block;margin-top:3px;">ℹ️ Where respondent lives — not used for violation check</span>
-        </div>
-      </div>
-      <div class="detail-item full ward-warn">
-        <div class="detail-key">Violation Basis</div>
-        <div class="detail-val warn" style="font-size:11px;">
-          ${d._gpsDetectedWard
-            ? '📡 GPS-based: enumerator\'s GPS coordinates were inside '+esc(d._gpsDetectedWard)+', not their assigned ward. The respondent\'s home ward is irrelevant — only where the enumerator stood matters.'
-            : d._gpsWardWarning
-              ? '⚠️ Flag-based: survey app flagged enumerator as outside their assigned GPS zone at submission time.'
-              : '⚠️ Legacy: flagged before GPS ward tracking was enabled. Cannot determine enumerator location from old data.'}
-        </div>
-      </div>
+      <div class="detail-item"><div class="detail-key">Respondent's Home Ward</div><div class="detail-val" style="color:var(--muted)">${esc(d.ward||'—')}<span style="font-size:10px;color:var(--muted2);display:block;margin-top:3px;">ℹ️ Self-reported — not used for violation check</span></div></div>
     </div>`:'';
 
   document.getElementById('modalTitle').textContent='Submission #'+d._idx+' — '+resName(d);
@@ -1206,11 +1633,12 @@ function openModal(d){
       <div class="detail-item"><div class="detail-key">Enumerator Declaration</div><div class="detail-val">${esc(d.enumDecl||'—')}</div></div>
     </div>
     ${wardSection}
-    ${(conflict||skip_)?`
+    ${(conflict||skip_||isShort)?`
     <div class="fraud-section-title">🚨 Integrity Flags</div>
     <div class="detail-grid">
       ${conflict?`<div class="detail-item fraud-highlight full"><div class="detail-key">Spatial Conflict</div><div class="detail-val danger">⚠ Another submission within 200 m and 90 min was detected.</div></div>`:''}
       ${skip_?`<div class="detail-item ${reason?'':'fraud-highlight'} full"><div class="detail-key">GPS Override</div><div class="detail-val ${reason?'warn':'danger'}">${reason?'Reason: "'+esc(reason)+'"':'⚠ No reason recorded'}<br><span style="font-size:10px;opacity:.8">Supervisor PIN: ${supPin?'✓ Used':'✗ Not recorded'}</span></div></div>`:''}
+      ${isShort?`<div class="detail-item full" style="border-color:rgba(251,146,60,.4);background:rgba(251,146,60,.06);"><div class="detail-key">Too Fast For A Real Interview</div><div class="detail-val" style="color:var(--orange);">⏱ Less than 20 minutes after previous submission.</div></div>`:''}
     </div>`:''}
     <div class="modal-section-title">📍 GPS &amp; Location</div>
     <div id="modal-loc-block-${d._id}" style="margin-bottom:10px;">${locationCacheData[d._id]?makeLocDetailBlock(locationCacheData[d._id],lat,lng):'<div class="loc-loading">⏳ Resolving place name…</div>'}</div>
@@ -1221,22 +1649,17 @@ function openModal(d){
       <div class="detail-item"><div class="detail-key">GPS Accuracy</div><div class="detail-val">${acc!==null?accBadge(acc):'—'}</div></div>
       <div class="detail-item"><div class="detail-key">Latitude</div><div class="detail-val" style="font-family:var(--mono)">${lat!==null?lat.toFixed(6):'—'}</div></div>
       <div class="detail-item"><div class="detail-key">Longitude</div><div class="detail-val" style="font-family:var(--mono)">${lng!==null?lng.toFixed(6):'—'}</div></div>
-      ${d._gpsDetectedWard?`<div class="detail-item"><div class="detail-key">GPS-Detected Ward</div><div class="detail-val good">📡 ${esc(d._gpsDetectedWard)}</div></div>`:''}
-      ${d._gpsAssignedWard?`<div class="detail-item"><div class="detail-key">GPS-Assigned Ward</div><div class="detail-val">${esc(d._gpsAssignedWard)}</div></div>`:''}
     </div>
     <div class="modal-section-title">📋 Survey Location</div>
     <div class="detail-grid">
       <div class="detail-item"><div class="detail-key">Constituency</div><div class="detail-val">${esc(d.constituency||'—')}</div></div>
-      <div class="detail-item"><div class="detail-key">Respondent's Ward</div><div class="detail-val">${esc(d.ward||'—')}<span style="font-size:9px;color:var(--muted2);display:block">Self-reported home ward</span></div></div>
+      <div class="detail-item"><div class="detail-key">Respondent's Ward</div><div class="detail-val">${esc(d.ward||'—')}</div></div>
       <div class="detail-item"><div class="detail-key">Assigned Wards</div><div class="detail-val">${assigned?assigned.map(w=>'<span class="ward-pill">'+esc(w)+'</span>').join(' '):'<span style="color:var(--muted2)">Unrestricted</span>'}</div></div>
-      <div class="detail-item"><div class="detail-key">GPS Zone OK?</div><div class="detail-val ${wardV?'warn':'good'}">${!assigned?'— (no restriction)':wardV?'⚠ Enumerator outside assigned zone':'✓ Confirmed in assigned zone'}</div></div>
-      <div class="detail-item"><div class="detail-key">Polling Station</div><div class="detail-val">${esc(d.pollingStation||'—')}</div></div>
-      <div class="detail-item"><div class="detail-key">PS Validation</div><div class="detail-val">${esc(d._psValidation||'—')}</div></div>
+      <div class="detail-item"><div class="detail-key">GPS Zone OK?</div><div class="detail-val ${wardV?'warn':'good'}">${!assigned?'— (no restriction)':wardV?'⚠ Outside assigned zone':'✓ Confirmed in assigned zone'}</div></div>
     </div>
     <div class="modal-section-title">🔑 Metadata</div>
     <div class="detail-grid">
       <div class="detail-item full"><div class="detail-key">Firestore Doc ID</div><div class="detail-val" style="font-family:var(--mono);font-size:11px">${d._id}</div></div>
-      <div class="detail-item"><div class="detail-key">Respondent ID</div><div class="detail-val" style="font-family:var(--mono);font-size:11px">${esc(d._respondentId||'—')}</div></div>
       <div class="detail-item"><div class="detail-key">Spatial Conflict Flag</div><div class="detail-val ${conflict?'danger':'good'}">${conflict?'⚠ YES':'✓ No'}</div></div>
     </div>`;
   document.getElementById('modalBg').classList.add('open');
@@ -1247,17 +1670,14 @@ function closeModal(e){if(e.target===document.getElementById('modalBg')) closeMo
 function closeModalDirect(){document.getElementById('modalBg').classList.remove('open');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModalDirect();closeSendModal();}});
 
-/* ══ GEOCODE ══ */
 const geocodeQueue=[];let geocodeRunning=false;
 function queueGeocode(id,lat,lng){if(locationCache[id]||geocodeQueue.find(q=>q.id===id)) return;geocodeQueue.push({id,lat,lng});if(!geocodeRunning) drainGeocodeQueue();}
 async function drainGeocodeQueue(){geocodeRunning=true;while(geocodeQueue.length>0){const{id,lat,lng}=geocodeQueue.shift();if(locationCache[id]) continue;try{const locData=await getLocationData(lat,lng);locationCache[id]=locData.full;locationCacheData[id]=locData;const cell=document.getElementById('loc-'+id);if(cell) cell.innerHTML=makeLocBadge(locData);const mb=document.getElementById('modal-loc-block-'+id);if(mb) mb.innerHTML=makeLocDetailBlock(locData,lat,lng);}catch(e){locationCache[id]='Unknown';}await new Promise(r=>setTimeout(r,1100));}geocodeRunning=false;}
 
-/* ══ DARK MODE ══ */
 let isDark=true;
 function toggleDarkMode(){isDark=!isDark;document.body.classList.toggle('light',!isDark);document.getElementById('dmTrack').classList.toggle('on',isDark);document.getElementById('dmLabel').textContent=isDark?'🌙 Dark':'☀️ Light';localStorage.setItem('ecs_theme',isDark?'dark':'light');}
 (function(){const saved=localStorage.getItem('ecs_theme');if(saved==='light'){isDark=false;document.body.classList.add('light');document.getElementById('dmTrack')?.classList.remove('on');}else{document.getElementById('dmTrack')?.classList.add('on');}})();
 
-/* ══ REVERSE GEOCODE ══ */
 const LANDMARKS=[{name:'Embu University College',lat:-0.5156,lng:37.4564},{name:'Embu Town CBD',lat:-0.5309,lng:37.4586},{name:'Embu County Referral Hospital',lat:-0.5291,lng:37.4613},{name:'Runyenjes Market',lat:-0.4085,lng:37.5729},{name:'Mbeere South Constituency',lat:-0.6540,lng:37.6890},{name:'Manyatta Constituency HQ',lat:-0.5273,lng:37.4559},{name:'Kiambere Dam Area',lat:-0.7200,lng:37.6800}];
 const R_EARTH=6371000;
 function haver(la1,lo1,la2,lo2){const dL=(la2-la1)*Math.PI/180,dO=(lo2-lo1)*Math.PI/180,a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)**2;return R_EARTH*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
@@ -1288,7 +1708,6 @@ function makeLocDetailBlock(locData,lat,lng){
   return`<div style="background:var(--accent-l);border:1px solid rgba(45,212,191,.25);border-left:3px solid var(--accent);border-radius:var(--r);padding:10px 14px;"><div style="font-size:14px;font-weight:700;color:var(--accent)">📍 ${esc(locData.short)}</div><div style="font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:4px;">Lat ${lat?.toFixed(6)}, Lng ${lng?.toFixed(6)}</div>${rows.map(r=>'<div style="font-size:12px;margin-top:5px">'+r+'</div>').join('')}</div><div style="display:flex;gap:8px;margin-top:8px"><a style="flex:1;text-align:center;padding:7px;background:var(--accent-l);border:1px solid rgba(45,212,191,.25);border-radius:var(--r);display:block;color:var(--accent);text-decoration:none;font-size:12px;" href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=16" target="_blank">🗺 OSM</a><a style="flex:1;text-align:center;padding:7px;background:var(--green-l);border:1px solid rgba(74,222,128,.25);border-radius:var(--r);display:block;color:var(--green);text-decoration:none;font-size:12px;" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">📌 Google Maps</a></div>`;
 }
 
-/* ══ EXPORTS ══ */
 const HEADERS=['Server Timestamp','Device Time','Time Drift (min)','Researcher Name','Researcher ID','Researcher Email','Constituency','Respondent Ward','Assigned Wards','GPS Zone OK?','GPS Detected Ward','Polling Station','PS Validation','GPS Lat','GPS Lng','GPS Accuracy (m)','GPS Skipped','GPS Skip Reason','Supervisor Override','Spatial Conflict','Location Name','Respondent ID','Firestore Doc ID'];
 function buildRows(data){return data.map(d=>{const ts=serverTs(d),dv=devTime(d);let drift='';if(ts&&dv) drift=Math.round(Math.abs(ts.getTime()-new Date(dv).getTime())/60000);const acc=gpsAcc(d),lat=gpsLat(d),skip_=gpsSkip(d),conflict=hasConflict(d),assigned=getResearcherAssignedWards(d),wardV=isWardViolation(d);return[ts?ts.toISOString():'',dv||'',drift,resName(d),resId(d),d._researcherEmail||'',d.constituency||'',d.ward||'',assigned?assigned.join('; '):'Unrestricted',!assigned?'N/A':wardV?'VIOLATION':'OK',d._gpsDetectedWard||'',d.pollingStation||'',d._psValidation||'',lat??'',gpsLng(d)??'',acc??'',skip_?'Yes':'No',skipReason(d)||'',supervisorOverride(d)?'Yes':'No',conflict?'Yes':'No',locationCache[d._id]||'',d._respondentId||'',d._id];})}
 function csvRow(arr){return arr.map(v=>{const s=String(v??'').replace(/"/g,'""');return(s.includes(',')||s.includes('"')||s.includes('\n'))?'"'+s+'"':s;}).join(',');}
@@ -1298,7 +1717,6 @@ function exportExcel(){if(!filtered.length) return toast('No data','error');cons
 function dl(content,filename,mime){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));a.download=filename;a.click();}
 function stamp(){return new Date().toISOString().slice(0,10);}
 
-/* ══ HELPERS ══ */
 const esc=v=>v?String(v).replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';
 const pct=(n,t)=>t?Math.round(n/t*100):0;
 const groupBy=(arr,keyFn)=>arr.reduce((m,d)=>{const k=(typeof keyFn==='function'?keyFn(d):d[keyFn])||'Unknown';(m[k]=m[k]||[]).push(d);return m;},{});
